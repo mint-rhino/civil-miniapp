@@ -13,23 +13,22 @@
 
     <style>
         :root {
-            --primary-color: #ff9800; /* رنگ نارنجی مهندسی */
+            --primary-color: #ff9800;
             --primary-hover: #f57c00;
             --bg-dark: #121212;
             --text-light: #f5f5f5;
+            --card-bg: rgba(255, 152, 0, 0.08);
         }
 
         body {
             font-family: 'Vazirmatn', system-ui, -apple-system, sans-serif;
             background-color: var(--bg-dark);
-            /* الگوی هندسی ظریف برای حس عمرانی + گرادیانت دارک */
             background-image: 
                 linear-gradient(rgba(18, 18, 18, 0.85), rgba(18, 18, 18, 0.95)),
                 repeating-linear-gradient(45deg, #222 25%, transparent 25%, transparent 75%, #222 75%, #222),
                 repeating-linear-gradient(45deg, #222 25%, #121212 25%, #121212 75%, #222 75%, #222);
             background-position: 0 0, 0 0, 10px 10px;
             background-size: 100% 100%, 20px 20px, 20px 20px;
-            
             color: var(--text-light);
             padding: 20px;
             margin: 0;
@@ -50,7 +49,6 @@
             letter-spacing: 1px;
         }
 
-        /* یک خط تزئینی زیر تیتر */
         h2::after {
             content: '';
             display: block;
@@ -61,13 +59,113 @@
             border-radius: 2px;
         }
 
-        .menu-btn {
+        /* ─── دکمه اصلی (آکاردئونی) ─── */
+        .main-btn {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            padding: 20px 22px;
+            margin-bottom: 0;
+            background: linear-gradient(135deg, rgba(255,152,0,0.18), rgba(255,152,0,0.06));
+            color: var(--primary-color);
+            border: 1.5px solid var(--primary-color);
+            border-radius: 14px;
+            font-size: 18px;
+            font-weight: 800;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.35s ease;
+            backdrop-filter: blur(6px);
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 18px rgba(255,152,0,0.12);
+            position: relative;
+            z-index: 2;
+        }
+
+        .main-btn:active {
+            transform: scale(0.97);
+        }
+
+        .main-btn .arrow {
+            display: inline-block;
+            font-size: 20px;
+            transition: transform 0.35s ease;
+            line-height: 1;
+        }
+
+        .main-btn.open {
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+            margin-bottom: 0;
+            background: linear-gradient(135deg, rgba(255,152,0,0.28), rgba(255,152,0,0.12));
+        }
+
+        .main-btn.open .arrow {
+            transform: rotate(180deg);
+        }
+
+        /* ─── کانتینر زیرمنو ─── */
+        .submenu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s ease;
+            opacity: 0;
+            border: 1.5px solid transparent;
+            border-top: none;
+            border-radius: 0 0 14px 14px;
+            background: rgba(255, 152, 0, 0.03);
+            backdrop-filter: blur(4px);
+            margin-bottom: 16px;
+        }
+
+        .submenu.open {
+            max-height: 800px;
+            opacity: 1;
+            border-color: rgba(255, 152, 0, 0.35);
+            border-top: none;
+            padding: 10px 8px 14px;
+            margin-bottom: 16px;
+        }
+
+        .submenu .menu-btn {
             display: flex;
             align-items: center;
             justify-content: center;
             width: 100%;
-            padding: 18px;
-            margin-bottom: 16px;
+            padding: 15px;
+            margin-bottom: 10px;
+            background-color: rgba(255, 152, 0, 0.07);
+            color: var(--primary-color);
+            border: 1px solid rgba(255, 152, 0, 0.35);
+            border-radius: 10px;
+            font-size: 15.5px;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(4px);
+        }
+
+        .submenu .menu-btn:last-child {
+            margin-bottom: 0;
+        }
+
+        .submenu .menu-btn:active {
+            background-color: var(--primary-color);
+            color: #121212;
+            transform: scale(0.96);
+            box-shadow: 0 0 12px rgba(255, 152, 0, 0.35);
+        }
+
+        /* ─── دکمه‌های پایین ─── */
+        .bottom-btn {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            padding: 18px 22px;
+            margin-bottom: 0;
             background-color: rgba(255, 152, 0, 0.1);
             color: var(--primary-color);
             border: 1px solid var(--primary-color);
@@ -77,65 +175,178 @@
             cursor: pointer;
             text-align: center;
             transition: all 0.3s ease;
-            backdrop-filter: blur(5px); /* افکت شیشه‌ای */
+            backdrop-filter: blur(5px);
         }
 
-        .menu-btn:active {
+        .bottom-btn:active {
+            transform: scale(0.97);
+        }
+
+        .bottom-btn .arrow {
+            display: inline-block;
+            font-size: 18px;
+            transition: transform 0.35s ease;
+            line-height: 1;
+        }
+
+        .bottom-btn.open {
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+            margin-bottom: 0;
+            background-color: rgba(255, 152, 0, 0.18);
+        }
+
+        .bottom-btn.open .arrow {
+            transform: rotate(180deg);
+        }
+
+        /* ─── زیرمنوی دکمه‌های پایین ─── */
+        .bottom-submenu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s ease;
+            opacity: 0;
+            border: 1px solid transparent;
+            border-top: none;
+            border-radius: 0 0 12px 12px;
+            background: rgba(255, 152, 0, 0.03);
+            backdrop-filter: blur(4px);
+            margin-bottom: 14px;
+        }
+
+        .bottom-submenu.open {
+            max-height: 500px;
+            opacity: 1;
+            border-color: rgba(255, 152, 0, 0.35);
+            border-top: none;
+            padding: 10px 8px 14px;
+            margin-bottom: 14px;
+        }
+
+        .bottom-submenu .menu-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 14px;
+            margin-bottom: 10px;
+            background-color: rgba(255, 152, 0, 0.07);
+            color: var(--primary-color);
+            border: 1px solid rgba(255, 152, 0, 0.3);
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(4px);
+        }
+
+        .bottom-submenu .menu-btn:last-child {
+            margin-bottom: 0;
+        }
+
+        .bottom-submenu .menu-btn:active {
             background-color: var(--primary-color);
             color: #121212;
             transform: scale(0.96);
-            box-shadow: 0 0 15px rgba(255, 152, 0, 0.4);
+            box-shadow: 0 0 12px rgba(255, 152, 0, 0.35);
+        }
+
+        /* فاصله بین بخش‌ها */
+        .section-gap {
+            height: 14px;
         }
     </style>
 </head>
 <body>
     <h2>🏗️ منابع عمران فسا</h2>
 
-    <!-- دکمه هدایت به تاپیک -->
-    <button class="menu-btn" onclick="openTopic('https://t.me/CivilFasa_resources/2')">
-        فیزیک/استاتیک/دینامیک
-    </button>
-        <!-- دکمه ۱: نظام مهندسی -->
-    <button class="menu-btn" onclick="openTopic('https://t.me/CivilFasa_resources/295')">
-        📋 نظام مهندسی
+    <!-- ═══ دکمه اصلی: منابع درسی ═══ -->
+    <button class="main-btn" id="mainBtn" onclick="toggleSubmenu('submenu', 'mainBtn')">
+        <span>📚 منابع درسی</span>
+        <span class="arrow">▼</span>
     </button>
 
-    <!-- دکمه ۲: مقاومت مصالح -->
-    <button class="menu-btn" onclick="openTopic('https://t.me/CivilFasa_resources/498')">
-        🏗️ مقاومت مصالح
+    <div class="submenu" id="submenu">
+        <button class="menu-btn" onclick="openTopic('https://t.me/CivilFasa_resources/2')">
+            فیزیک / استاتیک / دینامیک
+        </button>
+        <button class="menu-btn" onclick="openTopic('https://t.me/CivilFasa_resources/295')">
+            📋 نظام مهندسی
+        </button>
+        <button class="menu-btn" onclick="openTopic('https://t.me/CivilFasa_resources/498')">
+            🏗️ مقاومت مصالح
+        </button>
+        <button class="menu-btn" onclick="openTopic('https://t.me/CivilFasa_resources/93')">
+            🛠️ دروس عملی و کارآموزی
+        </button>
+        <button class="menu-btn" onclick="openTopic('https://t.me/CivilFasa_resources/3')">
+            📐 ریاضی / آمار / دیفرانسیل
+        </button>
+        <button class="menu-btn" onclick="openTopic('https://t.me/CivilFasa_resources/6')">
+            📏 نقشه‌کشی / مبانی معماری / نقشه‌برداری
+        </button>
+        <button class="menu-btn" onclick="openTopic('https://t.me/CivilFasa_resources/80')">
+            🪨 زمین‌شناسی / مصالح / تکنولوژی بتن
+        </button>
+    </div>
+
+    <div class="section-gap"></div>
+
+    <!-- ═══ دکمه سامانه‌ها (کشویی) ═══ -->
+    <button class="bottom-btn" id="systemsBtn" onclick="toggleSubmenu('systemsSubmenu', 'systemsBtn')">
+        <span>🌐 سامانه‌ها</span>
+        <span class="arrow">▼</span>
     </button>
 
-    <!-- دکمه ۳: دروس عملی و کارآموزی -->
-    <button class="menu-btn" onclick="openTopic('https://t.me/CivilFasa_resources/93')">
-        🛠️ دروس عملی و کارآموزی
-    </button>
+    <div class="bottom-submenu" id="systemsSubmenu">
+        <button class="menu-btn" onclick="openExternal('https://food.fasau.ac.ir/')">
+            🍽️ کالینان (سامانه غذا)
+        </button>
+        <button class="menu-btn" onclick="openExternal('https://pershiess.fasau.ac.ir/')">
+            📖 آموزش (پرشیس)
+        </button>
+        <button class="menu-btn" onclick="openExternal('http://online.fasau.ac.ir/')">
+            💻 مودل (امتحانات)
+        </button>
+    </div>
 
-    <!-- دکمه ۴: ریاضی/آمار/دیفرانسیل -->
-    <button class="menu-btn" onclick="openTopic('https://t.me/CivilFasa_resources/3')">
-        📐 ریاضی / آمار / دیفرانسیل
-    </button>
+    <div class="section-gap"></div>
 
-    <!-- دکمه ۵: نقشه‌کشی/مبانی معماری/نقشه‌برداری -->
-    <button class="menu-btn" onclick="openTopic('https://t.me/CivilFasa_resources/6')">
-        📏 نقشه‌کشی / مبانی معماری / نقشه‌برداری
-    </button>
-
-    <!-- دکمه ۶: زمین‌شناسی/مصالح/تک بتن -->
-    <button class="menu-btn" onclick="openTopic('https://t.me/CivilFasa_resources/80')">
-        🪨 زمین‌شناسی / مصالح / تکنولوژی بتن
+    <!-- ═══ دکمه نرم‌افزارها ═══ -->
+    <button class="bottom-btn" onclick="openTopic('https://t.me/CivilFasa_resources/650')">
+        <span>💻 نرم‌افزارها</span>
     </button>
 
     <script>
-        // مقداردهی اولیه به Telegram WebApp
         Telegram.WebApp.ready();
-        Telegram.WebApp.expand(); // باز کردن در حالت تمام صفحه
-
-        // تغییر رنگ هدر تلگرام به رنگ دارک (اختیاری)
+        Telegram.WebApp.expand();
         Telegram.WebApp.setHeaderColor('#121212');
 
-        // تابع پرش به تاپیک با استفاده از openTelegramLink
+        // باز کردن لینک تلگرام (تاپیک‌های داخل کانال)
         function openTopic(url) {
             Telegram.WebApp.openTelegramLink(url);
+        }
+
+        // باز کردن لینک خارجی (سایت‌های دانشگاه) داخل مرورگر
+        function openExternal(url) {
+            Telegram.WebApp.openLink(url);
+        }
+
+        // باز و بسته کردن منوهای کشویی
+        function toggleSubmenu(submenuId, btnId) {
+            const submenu = document.getElementById(submenuId);
+            const btn = document.getElementById(btnId);
+            const isOpen = submenu.classList.contains('open');
+
+            if (isOpen) {
+                submenu.classList.remove('open');
+                btn.classList.remove('open');
+            } else {
+                submenu.classList.add('open');
+                btn.classList.add('open');
+            }
         }
     </script>
 </body>
