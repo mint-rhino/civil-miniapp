@@ -13,16 +13,17 @@
 
     <!-- فایل استایل جداگانه -->
     <link rel="stylesheet" href="style.css">
+
+    <!-- استایل مودال چارت -->
+    <style>
+        .chart-modal { position: fixed; inset: 0; z-index: 9999; background: #1d2021; display: none; flex-direction: column; }
+        .chart-modal.open { display: flex; }
+        .chart-modal-bar { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: #282828; border-bottom: 1px solid rgba(235,219,178,.15); flex-shrink: 0; }
+        .chart-modal-title { font-weight: 700; font-size: 14px; color: #ebdbb2; }
+        .chart-back-btn { background: rgba(235,219,178,.08); border: 1px solid rgba(235,219,178,.22); color: #ebdbb2; padding: 6px 12px; border-radius: 8px; font-size: 13px; cursor: pointer; }
+        .chart-frame { flex: 1; width: 100%; border: 0; background: #1d2021; }
+    </style>
 </head>
-    <!-- مودال چارت -->
-<div id="chartModal" class="chart-modal">
-    <div class="chart-modal-bar">
-        <button class="chart-back-btn" onclick="closeChart()">→ بازگشت</button>
-        <span class="chart-modal-title">چارت دروس عمران</span>
-        <span style="width:70px;"></span>
-    </div>
-    <iframe id="chartFrame" class="chart-frame" src="" title="چارت دروس عمران"></iframe>
-</div>
 <body>
 
     <div class="container">
@@ -117,8 +118,9 @@
                 </div>
                 <span class="link-arrow" style="color: var(--text-sub);">←</span>
             </button>
-            
-               <!-- بخش ۴: چارت دروس -->
+        </div>
+
+        <!-- بخش ۴: چارت دروس -->
         <div class="accordion-group single-btn">
             <button class="btn-trigger" onclick="openChart()">
                 <div class="btn-title">
@@ -128,11 +130,16 @@
                 <span class="link-arrow" style="color: var(--text-sub);">←</span>
             </button>
         </div>
-                </div>
-                <span class="link-arrow" style="color: var(--text-sub);">←</span>
-            </button>
+    </div>
+
+    <!-- مودال چارت (داخل body، آخر صفحه) -->
+    <div id="chartModal" class="chart-modal">
+        <div class="chart-modal-bar">
+            <button class="chart-back-btn" onclick="closeChart()">→ بازگشت</button>
+            <span class="chart-modal-title">چارت دروس عمران</span>
+            <span style="width:70px;"></span>
         </div>
-        </div>
+        <iframe id="chartFrame" class="chart-frame" src="" title="چارت دروس عمران"></iframe>
     </div>
 
     <!-- فایل جاوااسکریپت جداگانه -->
