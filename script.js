@@ -37,7 +37,6 @@ function toggleAccordion(btn, menuId) {
     const targetMenu = document.getElementById(menuId);
     const isOpen = btn.classList.contains('active');
 
-    // بستن تمام کشوهای دیگر (حالت آکاردئونی یکپارچه)
     document.querySelectorAll('.btn-trigger.active').forEach(activeBtn => {
         activeBtn.classList.remove('active');
     });
@@ -45,22 +44,48 @@ function toggleAccordion(btn, menuId) {
         menu.style.maxHeight = null;
     });
 
-    // اگر منوی فعلی بسته بود، آن را باز کن
     if (!isOpen) {
         btn.classList.add('active');
         targetMenu.style.maxHeight = targetMenu.scrollHeight + "px";
     }
 }
 
+/* ============================================================
+   مودال چارت دروس
+   ============================================================ */
+const CHART_SRC = 'چارت عمران.html';   // اگر نام فایل را عوض کردید، فقط اینجا تغییر دهید
+
 function openChart() {
+    triggerHaptic();
     const modal = document.getElementById('chartModal');
     const frame = document.getElementById('chartFrame');
-    // مسیر نسبی فایل چارت — اگر نام فایل را انگلیسی کردید اینجا هم تغییر دهید
-    if (!frame.src) frame.src = 'چارت عمران.html';
+    if (!modal || !frame) return;
+
+    // همیشه مسیر را ست کن — مطمئن‌ترین راه
+    if (frame.getAttribute('src') !== CHART_SRC) {
+        frame.src = CHART_SRC;
+    }
+
     modal.classList.add('open');
     document.body.style.overflow = 'hidden';
+
+    // دکمه بازگشت تلگرام (اختیاری ولی توصیه‌شده)
+    if (tg?.BackButton) {
+        tg.BackButton.show();
+        tg.BackButton.onClick(closeChart);
+    }
 }
+
 function closeChart() {
-    document.getElementById('chartModal').classList.remove('open');
+    triggerHaptic();
+    const modal = document.getElementById('chartModal');
+    if (!modal) return;
+
+    modal.classList.remove('open');
     document.body.style.overflow = '';
+
+    if (tg?.BackButton) {
+        tg.BackButton.hide();
+        tg.BackButton.offClick(closeChart);
+    }
 }
