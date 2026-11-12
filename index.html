@@ -14,6 +14,15 @@
     <!-- فایل استایل جداگانه -->
     <link rel="stylesheet" href="style.css">
 </head>
+    <!-- مودال چارت -->
+<div id="chartModal" class="chart-modal">
+    <div class="chart-modal-bar">
+        <button class="chart-back-btn" onclick="closeChart()">→ بازگشت</button>
+        <span class="chart-modal-title">چارت دروس عمران</span>
+        <span style="width:70px;"></span>
+    </div>
+    <iframe id="chartFrame" class="chart-frame" src="" title="چارت دروس عمران"></iframe>
+</div>
 <body>
 
     <div class="container">
@@ -108,12 +117,17 @@
                 </div>
                 <span class="link-arrow" style="color: var(--text-sub);">←</span>
             </button>
-            <!-- بخش ۴: چارت دروس -->
+            
+               <!-- بخش ۴: چارت دروس -->
         <div class="accordion-group single-btn">
-            <button class="btn-trigger" onclick="openExternal('چارت عمران.html')">
+            <button class="btn-trigger" onclick="openChart()">
                 <div class="btn-title">
                     <span class="icon">📊</span>
                     <span>چارت دروس عمران</span>
+                </div>
+                <span class="link-arrow" style="color: var(--text-sub);">←</span>
+            </button>
+        </div>
                 </div>
                 <span class="link-arrow" style="color: var(--text-sub);">←</span>
             </button>
