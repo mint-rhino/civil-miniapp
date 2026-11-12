@@ -1,0 +1,1487 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>چارت دروس مهندسی عمران - دانشگاه فسا</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<style>
+  :root {
+    --bg: #1d2021;
+    --bg-gradient: radial-gradient(circle at 50% 0%, #282828 0%, #1d2021 70%);
+    --panel: rgba(40, 40, 40, 0.82);
+    --panel-solid: #282828;
+    --panel-hover: #32302f;
+    --border: rgba(235, 219, 178, 0.10);
+    --border-strong: rgba(235, 219, 178, 0.22);
+    --text: #ebdbb2;
+    --muted: #928374;
+    --primary: #b8bb26;
+    --primary-light: #d5c96a;
+    --primary-dark: #98971a;
+    --primary-glow: rgba(184, 187, 38, 0.18);
+    --blue: #83a598;
+    --orange: #fe8019;
+    --purple: #d3869b;
+    --yellow: #fabd2f;
+    --red: #fb4934;
+    --shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
+    --radius: 16px;
+  }
+
+  * {
+    box-sizing: border-box;
+    font-family: "Vazirmatn", "Segoe UI", Tahoma, sans-serif;
+  }
+
+  html, body {
+    overflow-x: hidden;
+    max-width: 100%;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    background-image: var(--bg-gradient);
+    background-attachment: fixed;
+    color: var(--text);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  .container {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 28px 20px 50px;
+  }
+
+  /* ====== هدر ====== */
+  header {
+    text-align: center;
+    margin-bottom: 28px;
+    position: relative;
+  }
+
+  .university-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(184, 187, 38, 0.12);
+    border: 1px solid rgba(184, 187, 38, 0.35);
+    color: var(--primary-light);
+    padding: 5px 14px;
+    border-radius: 999px;
+    font-size: 12.5px;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+
+  h1 {
+    margin: 0 0 6px 0;
+    font-size: clamp(20px, 4vw, 30px);
+    font-weight: 800;
+    background: linear-gradient(135deg, #ebdbb2 30%, var(--primary-light) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.3px;
+  }
+
+  .subtitle {
+    color: var(--muted);
+    font-size: 13.5px;
+    margin: 0;
+  }
+
+  /* ====== داشبورد آمار ====== */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 18px;
+  }
+
+  .stat-card {
+    background: var(--panel);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow: var(--shadow);
+    transition: transform 0.25s ease, border-color 0.25s ease;
+  }
+
+  .stat-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--border-strong);
+  }
+
+  .stat-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  .stat-card.total .stat-icon { background: rgba(131, 165, 152, 0.15); color: var(--blue); }
+  .stat-card.passed .stat-icon { background: rgba(184, 187, 38, 0.16); color: var(--primary-light); }
+  .stat-card.remaining .stat-icon { background: rgba(254, 128, 25, 0.15); color: var(--orange); }
+  .stat-card.courses .stat-icon { background: rgba(211, 134, 155, 0.15); color: var(--purple); }
+
+  .stat-info {
+    text-align: right;
+    min-width: 0;
+  }
+
+  .stat-card .label {
+    color: var(--muted);
+    font-size: 12px;
+    margin-bottom: 2px;
+  }
+
+  .stat-card .value {
+    font-size: 24px;
+    font-weight: 800;
+    line-height: 1.2;
+  }
+
+  .stat-card.total .value { color: var(--blue); }
+  .stat-card.passed .value { color: var(--primary-light); }
+  .stat-card.remaining .value { color: var(--orange); }
+  .stat-card.courses .value { color: var(--purple); }
+
+  /* ====== نوار پیشرفت ====== */
+  .progress-wrap {
+    background: var(--panel);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+  }
+
+  .progress-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13.5px;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+
+  .progress-info strong {
+    color: var(--primary-light);
+    font-size: 15px;
+  }
+
+  .progress-bar {
+    width: 100%;
+    height: 12px;
+    background: rgba(235, 219, 178, 0.08);
+    border-radius: 999px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--primary-dark), var(--primary-light));
+    border-radius: 999px;
+    transition: width 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+    box-shadow: 0 0 14px rgba(184, 187, 38, 0.45);
+  }
+
+  /* ====== نوار ابزار و فیلتر ====== */
+  .controls-bar {
+    background: var(--panel);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    margin-bottom: 24px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: var(--shadow);
+  }
+
+  .search-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    flex: 1;
+  }
+
+  .search-box {
+    position: relative;
+    flex: 1;
+    min-width: 180px;
+  }
+
+  .search-box input {
+    width: 100%;
+    background: rgba(29, 32, 33, 0.8);
+    border: 1px solid var(--border-strong);
+    color: var(--text);
+    padding: 9px 36px 9px 12px;
+    border-radius: 10px;
+    font-size: 13.5px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .search-box input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-glow);
+  }
+
+  .search-box::before {
+    content: "🔍";
+    position: absolute;
+    right: 11px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 13px;
+    opacity: 0.7;
+    pointer-events: none;
+  }
+
+  select.filter-select {
+    background: rgba(29, 32, 33, 0.8);
+    border: 1px solid var(--border-strong);
+    color: var(--text);
+    padding: 9px 12px;
+    border-radius: 10px;
+    font-size: 13px;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+
+  select.filter-select:focus {
+    border-color: var(--primary);
+  }
+
+  .toolbar {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  button {
+    background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+    color: #1d2021;
+    border: none;
+    padding: 9px 15px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: transform 0.15s ease, filter 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  button:hover {
+    filter: brightness(1.08);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(184, 187, 38, 0.28);
+  }
+
+  button:active {
+    transform: translateY(0);
+  }
+
+  button.secondary {
+    background: rgba(235, 219, 178, 0.06);
+    color: var(--text);
+    border: 1px solid var(--border-strong);
+    box-shadow: none;
+  }
+
+  button.secondary:hover {
+    background: rgba(235, 219, 178, 0.12);
+    box-shadow: none;
+  }
+
+  button.danger:hover {
+    background: rgba(251, 73, 52, 0.16);
+    border-color: rgba(251, 73, 52, 0.4);
+    color: #fb4934;
+  }
+
+  /* ====== راهنمای رنگ‌ها ====== */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 16px;
+    justify-content: center;
+    margin-bottom: 20px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  /* ====== کارت ترم‌ها ====== */
+  .term {
+    background: var(--panel);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    margin-bottom: 22px;
+    box-shadow: var(--shadow);
+    transition: border-color 0.3s ease;
+  }
+
+  .term.term-completed {
+    border-color: rgba(184, 187, 38, 0.45);
+  }
+
+  .term-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 14px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .term-title-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .term h2 {
+    color: var(--text);
+    margin: 0;
+    font-size: 17.5px;
+    font-weight: 700;
+  }
+
+  .term-units-pill {
+    font-size: 12px;
+    color: var(--primary-light);
+    background: rgba(184, 187, 38, 0.12);
+    border: 1px solid rgba(184, 187, 38, 0.28);
+    padding: 2px 10px;
+    border-radius: 999px;
+    font-weight: 600;
+  }
+
+  .term-check-btn {
+    padding: 6px 12px;
+    font-size: 12px;
+    border-radius: 8px;
+  }
+
+  .table-responsive {
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+  }
+
+  th, td {
+    padding: 11px 12px;
+    text-align: right;
+    border-bottom: 1px solid var(--border);
+  }
+
+  th {
+    color: var(--muted);
+    font-weight: 600;
+    font-size: 12.5px;
+    background: rgba(29, 32, 33, 0.6);
+    white-space: nowrap;
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+
+  .course-row {
+    transition: background-color 0.2s ease, opacity 0.25s ease;
+    cursor: pointer;
+  }
+
+  .course-row:hover:not(.locked) {
+    background: rgba(235, 219, 178, 0.045);
+  }
+
+  .course-row.locked {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: rgba(0, 0, 0, 0.18);
+  }
+
+  .course-row.passed-row {
+    background: rgba(184, 187, 38, 0.10);
+  }
+
+  .course-row.passed-row:hover {
+    background: rgba(184, 187, 38, 0.16);
+  }
+
+  .course-name {
+    font-weight: 600;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    word-break: break-word;
+  }
+
+  .course-row.passed-row .course-name {
+    color: var(--primary-light);
+  }
+
+  .lock-icon {
+    font-size: 13px;
+    opacity: 0.85;
+    flex-shrink: 0;
+  }
+
+  /* چک‌باکس سفارشی */
+  .chk-wrap {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .chk {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--border-strong);
+    border-radius: 6px;
+    background: rgba(29, 32, 33, 0.8);
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s ease;
+    margin: 0;
+  }
+
+  .chk:hover:not(:disabled) {
+    border-color: var(--primary-light);
+  }
+
+  .chk:checked {
+    background: var(--primary);
+    border-color: var(--primary);
+  }
+
+  .chk:checked::after {
+    content: "✓";
+    position: absolute;
+    color: #1d2021;
+    font-size: 13px;
+    font-weight: 800;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .chk:disabled {
+    cursor: not-allowed;
+    opacity: 0.4;
+  }
+
+  /* بج‌های رنگی نوع درس */
+  .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 11.5px;
+    font-weight: 600;
+    white-space: nowrap;
+    border: 1px solid transparent;
+  }
+
+  .badge-base { background: rgba(131, 165, 152, 0.15); color: #83a598; border-color: rgba(131, 165, 152, 0.35); }
+  .badge-core { background: rgba(184, 187, 38, 0.14); color: #b8bb26; border-color: rgba(184, 187, 38, 0.35); }
+  .badge-opt  { background: rgba(211, 134, 155, 0.15); color: #d3869b; border-color: rgba(211, 134, 155, 0.35); }
+  .badge-gen  { background: rgba(254, 128, 25, 0.14); color: #fe8019; border-color: rgba(254, 128, 25, 0.35); }
+  .badge-skill{ background: rgba(250, 189, 47, 0.14); color: #fabd2f; border-color: rgba(250, 189, 47, 0.35); }
+
+  /* پیش‌نیازها */
+  .prereq-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    align-items: center;
+  }
+
+  .prereq-tag {
+    font-size: 11.5px;
+    padding: 2px 8px;
+    border-radius: 6px;
+    background: rgba(235, 219, 178, 0.05);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    word-break: break-word;
+  }
+
+  .prereq-tag.met {
+    background: rgba(184, 187, 38, 0.16);
+    border-color: rgba(184, 187, 38, 0.4);
+    color: var(--primary-light);
+  }
+
+  .note-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--orange);
+    font-size: 11.5px;
+    background: rgba(254, 128, 25, 0.1);
+    border: 1px solid rgba(254, 128, 25, 0.28);
+    padding: 2px 8px;
+    border-radius: 6px;
+  }
+
+  /* ====== فوتر ترم ====== */
+  .term-footer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: flex-end;
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px dashed var(--border);
+    font-size: 12.5px;
+  }
+
+  .term-footer .chip {
+    background: rgba(29, 32, 33, 0.6);
+    border: 1px solid var(--border);
+    padding: 4px 12px;
+    border-radius: 999px;
+    color: var(--muted);
+  }
+
+  .term-footer .chip strong {
+    color: var(--text);
+  }
+
+  .term-footer .chip.done {
+    background: rgba(184, 187, 38, 0.12);
+    border-color: rgba(184, 187, 38, 0.32);
+    color: var(--primary-light);
+  }
+
+  .term-footer .chip.done strong {
+    color: var(--primary-light);
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--muted);
+    background: var(--panel);
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius);
+    display: none;
+  }
+
+  /* ====== اعلان ذخیره (Toast) ====== */
+  .toast {
+    position: fixed;
+    bottom: 22px;
+    left: 22px;
+    background: #3c3836;
+    color: var(--text);
+    border: 1px solid rgba(184, 187, 38, 0.45);
+    padding: 10px 16px;
+    border-radius: 12px;
+    font-size: 13px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    opacity: 0;
+    transform: translateY(15px);
+    pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    z-index: 999;
+  }
+
+  .toast.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  footer {
+    text-align: center;
+    margin-top: 36px;
+    padding: 20px;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 13.5px;
+  }
+
+  footer strong {
+    color: var(--primary-light);
+  }
+
+  /* ====== ریسپانسیو تبلت و موبایل (بدون اسکرول افقی) ====== */
+  @media (max-width: 860px) {
+    .stats {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 680px) {
+    .container {
+      padding: 16px 12px 40px;
+    }
+
+    .stats {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .stat-card {
+      padding: 12px;
+      gap: 10px;
+    }
+
+    .stat-icon {
+      width: 36px;
+      height: 36px;
+      font-size: 17px;
+      border-radius: 10px;
+    }
+
+    .stat-card .label {
+      font-size: 11px;
+    }
+
+    .stat-card .value {
+      font-size: 19px;
+    }
+
+    .controls-bar {
+      flex-direction: column;
+      align-items: stretch;
+      padding: 12px;
+    }
+
+    .search-filters {
+      flex-direction: column;
+    }
+
+    .search-box {
+      width: 100%;
+    }
+
+    select.filter-select {
+      width: 100%;
+    }
+
+    .toolbar {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .toolbar button:first-child {
+      grid-column: span 2;
+      justify-content: center;
+    }
+
+    .toolbar button {
+      justify-content: center;
+      padding: 10px 12px;
+    }
+
+    .term {
+      padding: 14px 12px;
+      margin-bottom: 16px;
+    }
+
+    .term-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .term-check-btn {
+      width: 100%;
+      justify-content: center;
+      padding: 8px 12px;
+    }
+
+    /* تبدیل جدول به کارت‌های عمودی بدون نیاز به اسکرول افقی در موبایل */
+    .table-responsive {
+      border: none;
+      border-radius: 0;
+    }
+
+    table, thead, tbody, th, td, tr {
+      display: block;
+      width: 100%;
+    }
+
+    thead {
+      display: none;
+    }
+
+    tbody {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    tr.course-row {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      grid-template-areas:
+        "chk title"
+        "meta meta"
+        "prereq prereq";
+      gap: 8px 10px;
+      align-items: center;
+      background: rgba(29, 32, 33, 0.6);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+    }
+
+    tr.course-row.passed-row {
+      background: rgba(184, 187, 38, 0.10);
+      border-color: rgba(184, 187, 38, 0.38);
+    }
+
+    tr.course-row.locked {
+      background: rgba(0, 0, 0, 0.3);
+    }
+
+    td {
+      border: none !important;
+      padding: 0 !important;
+      text-align: right !important;
+    }
+
+    td.col-chk {
+      grid-area: chk;
+      display: flex;
+      align-items: center;
+    }
+
+    td.col-name {
+      grid-area: title;
+    }
+
+    .course-name {
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    /* ردیف واحد و دسته‌بندی بدون هم‌پوشانی */
+    td.col-units {
+      grid-area: meta;
+      justify-self: start;
+      width: auto !important;
+      display: inline-flex !important;
+      align-items: center;
+      background: rgba(235, 219, 178, 0.07);
+      border: 1px solid var(--border) !important;
+      padding: 3px 10px !important;
+      border-radius: 999px;
+      font-size: 12px;
+      color: var(--text);
+      white-space: nowrap;
+    }
+
+    td.col-units::after {
+      content: " واحد";
+      margin-right: 4px;
+      font-weight: 400;
+      color: var(--muted);
+    }
+
+    td.col-type {
+      grid-area: meta;
+      justify-self: end;
+      width: auto !important;
+      display: inline-flex !important;
+      align-items: center;
+    }
+
+    td.col-prereq {
+      grid-area: prereq;
+      padding-top: 8px !important;
+      margin-top: 2px;
+      border-top: 1px dashed var(--border) !important;
+    }
+
+    .term-footer {
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .term-footer .chip {
+      font-size: 11.5px;
+      padding: 4px 10px;
+    }
+
+    .toast {
+      left: 12px;
+      right: 12px;
+      bottom: 14px;
+      justify-content: center;
+    }
+  }
+
+  @media print {
+    body { background: #fff !important; color: #000 !important; }
+    .controls-bar, .legend, .term-check-btn, .toast { display: none !important; }
+    .term, .stat-card, .progress-wrap {
+      background: #fff !important;
+      border: 1px solid #ccc !important;
+      box-shadow: none !important;
+      break-inside: avoid;
+    }
+    th { background: #f3f4f6 !important; color: #000 !important; }
+    td, .course-name { color: #000 !important; }
+    .course-row.locked { opacity: 1 !important; }
+    .stat-card .value, footer strong { color: #000 !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <div class="university-pill">🏛️ دانشگاه فسا • دانشکده فنی و مهندسی</div>
+    <h1>چارت دروس پیشنهادی مهندسی عمران</h1>
+    <p class="subtitle">برنامه ۸ ترمه کارشناسی پیوسته (ورودی ۱۴۰۳ به بعد) — همراه با کنترل هوشمند پیش‌نیازها</p>
+  </header>
+
+  <!-- ====== داشبورد آمار ====== -->
+  <div class="stats" id="stats">
+    <div class="stat-card total">
+      <div class="stat-icon">📚</div>
+      <div class="stat-info">
+        <div class="label">تعداد کل واحدها</div>
+        <div class="value" id="statTotal">۰</div>
+      </div>
+    </div>
+    <div class="stat-card passed">
+      <div class="stat-icon">✅</div>
+      <div class="stat-info">
+        <div class="label">واحدهای پاس‌شده</div>
+        <div class="value" id="statPassed">۰</div>
+      </div>
+    </div>
+    <div class="stat-card remaining">
+      <div class="stat-icon">⏳</div>
+      <div class="stat-info">
+        <div class="label">واحدهای باقی‌مانده</div>
+        <div class="value" id="statRemaining">۰</div>
+      </div>
+    </div>
+    <div class="stat-card courses">
+      <div class="stat-icon">🎓</div>
+      <div class="stat-info">
+        <div class="label">تعداد دروس پاس‌شده</div>
+        <div class="value" id="statCourses">۰</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== نوار پیشرفت ====== -->
+  <div class="progress-wrap" id="progressSection">
+    <div class="progress-info">
+      <span>درصد پیشرفت تحصیلی: <strong id="progressPct">۰٪</strong></span>
+      <span id="progressText">۰ از ۰ واحد</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  </div>
+
+  <!-- ====== نوار جستجو، فیلتر و دکمه‌ها ====== -->
+  <div class="controls-bar">
+    <div class="search-filters">
+      <div class="search-box">
+        <input type="text" id="searchInput" placeholder="جستجوی نام درس یا پیش‌نیاز..." oninput="applyFilters()">
+      </div>
+      <select class="filter-select" id="typeFilter" onchange="applyFilters()">
+        <option value="all">همه دسته‌بندی‌ها</option>
+        <option value="پایه">دروس پایه</option>
+        <option value="تخصصی الزامی">تخصصی الزامی</option>
+        <option value="اختیاری">دروس اختیاری</option>
+        <option value="مهارتی">دروس مهارتی</option>
+        <option value="عمومی">دروس عمومی</option>
+      </select>
+      <select class="filter-select" id="statusFilter" onchange="applyFilters()">
+        <option value="all">همه وضعیت‌ها</option>
+        <option value="passed">پاس‌شده</option>
+        <option value="unlocked">قابل اخذ (باز)</option>
+        <option value="locked">قفل‌شده (نیازمند پیش‌نیاز)</option>
+      </select>
+    </div>
+
+    <div class="toolbar">
+      <button onclick="exportPDF()">📄 خروجی PDF</button>
+      <button id="toggleAllBtn" class="secondary" onclick="toggleAll()">✅ انتخاب همه</button>
+      <button class="secondary danger" onclick="resetAll()">♻️ بازنشانی</button>
+    </div>
+  </div>
+
+  <!-- ====== راهنمای رنگ‌ها ====== -->
+  <div class="legend">
+    <div class="legend-item"><span class="dot" style="background:#83a598;"></span> پایه</div>
+    <div class="legend-item"><span class="dot" style="background:#b8bb26;"></span> تخصصی الزامی</div>
+    <div class="legend-item"><span class="dot" style="background:#d3869b;"></span> اختیاری</div>
+    <div class="legend-item"><span class="dot" style="background:#fabd2f;"></span> مهارتی</div>
+    <div class="legend-item"><span class="dot" style="background:#fe8019;"></span> عمومی</div>
+  </div>
+
+  <div id="emptyState" class="empty-state">
+    هیچ درسی با فیلترهای انتخاب‌شده مطابقت ندارد.
+  </div>
+
+  <div id="chart"></div>
+
+  <footer>
+    طراحی و توسعه: <strong>کوشا آریاپور</strong> • ذخیره خودکار تغییرات در مرورگر فعال است
+  </footer>
+</div>
+
+<div class="toast" id="toast">💾 تغییرات ذخیره شد</div>
+
+<script>
+/* ============================================================
+   داده دروس — اصلاح‌شده بر اساس فایل «چارت کارشناسی عمران.pdf»
+   ============================================================ */
+const STORAGE_KEY = "fasa_civil_chart_v3";
+
+const terms = [
+  {
+    title: "نیمسال اول",
+    courses: [
+      { name: "ریاضی عمومی ۱", units: 3, type: "پایه", prereq: [] },
+      { name: "فیزیک ۱", units: 3, type: "پایه", prereq: [] },
+      { name: "برنامه‌سازی کامپیوتر", units: 3, type: "پایه", prereq: [] },
+      { name: "کارگاه عمومی", units: 1, type: "پایه", prereq: [] },
+      { name: "زمین‌شناسی برای مهندسی عمران", units: 2, type: "تخصصی الزامی", prereq: [] },
+      { name: "رسم فنی و نقشه‌کشی ساختمان", units: 2, type: "تخصصی الزامی", prereq: [] },
+      { name: "ادبیات فارسی", units: 3, type: "عمومی", prereq: [] },
+    ]
+  },
+  {
+    title: "نیمسال دوم",
+    courses: [
+      { name: "ریاضی عمومی ۲", units: 3, type: "پایه", prereq: ["ریاضی عمومی ۱"] },
+      { name: "آمار و احتمال مهندسی", units: 3, type: "پایه", prereq: ["ریاضی عمومی ۱"] },
+      { name: "آز فیزیک ۱", units: 1, type: "پایه", prereq: ["فیزیک ۱"] },
+      { name: "استاتیک", units: 3, type: "تخصصی الزامی", prereq: ["ریاضی عمومی ۱"] },
+      { name: "مصالح و فرآورده‌های ساختمانی", units: 2, type: "تخصصی الزامی", prereq: ["زمین‌شناسی برای مهندسی عمران"] },
+      { name: "مبانی معماری و شهرسازی", units: 2, type: "تخصصی الزامی", prereq: ["رسم فنی و نقشه‌کشی ساختمان"] },
+      { name: "آشنایی با رشته مهندسی عمران (کاربینی)", units: 1, type: "مهارتی", prereq: [] },
+      { name: "آیین زندگی (اخلاق کاربردی)", units: 2, type: "عمومی", prereq: [] },
+      { name: "زبان خارجی (انگلیسی)", units: 3, type: "عمومی", prereq: [] },
+    ]
+  },
+  {
+    title: "نیمسال سوم",
+    courses: [
+      { name: "معادلات دیفرانسیل", units: 3, type: "پایه", prereq: ["ریاضی عمومی ۲"] },
+      { name: "مکانیک جامدات ۱", units: 3, type: "تخصصی الزامی", prereq: ["استاتیک"] },
+      { name: "دینامیک", units: 2, type: "تخصصی الزامی", prereq: ["استاتیک"] },
+      { name: "نقشه‌برداری و عملیات", units: 2, type: "تخصصی الزامی", prereq: ["ریاضی عمومی ۱"] },
+      { name: "مهندسی محیط زیست", units: 2, type: "تخصصی الزامی", prereq: [] },
+      { name: "تکنولوژی بتن", units: 2, type: "تخصصی الزامی", prereq: ["مصالح و فرآورده‌های ساختمانی"] },
+      { name: "اندیشه اسلامی ۱ (مبدأ و معاد)", units: 2, type: "عمومی", prereq: [] },
+      { name: "تربیت بدنی", units: 1, type: "عمومی", prereq: [] },
+    ]
+  },
+  {
+    title: "نیمسال چهارم",
+    courses: [
+      { name: "محاسبات عددی", units: 2, type: "پایه", prereq: ["معادلات دیفرانسیل"] },
+      { name: "تحلیل سازه ۱", units: 3, type: "تخصصی الزامی", prereq: ["مکانیک جامدات ۱"] },
+      { name: "مکانیک سیالات", units: 3, type: "تخصصی الزامی", prereq: ["دینامیک"] },
+      { name: "مکانیک خاک", units: 3, type: "تخصصی الزامی", prereq: ["مکانیک جامدات ۱", "زمین‌شناسی برای مهندسی عمران"] },
+      { name: "آزمایشگاه مکانیک خاک", units: 1, type: "تخصصی الزامی", prereq: ["مکانیک خاک"] },
+      { name: "اقتصاد پروژه‌های عمرانی", units: 2, type: "تخصصی الزامی", prereq: [] },
+      { name: "هوش مصنوعی و تحول دیجیتال", units: 2, type: "تخصصی الزامی", prereq: ["برنامه‌سازی کامپیوتر", "آمار و احتمال مهندسی"] },
+      { name: "انقلاب اسلامی ایران", units: 2, type: "عمومی", prereq: [] },
+    ]
+  },
+  {
+    title: "نیمسال پنجم",
+    courses: [
+      { name: "اصول مهندسی آب و فاضلاب", units: 2, type: "تخصصی الزامی", prereq: ["مکانیک سیالات", "مهندسی محیط زیست"] },
+      { name: "طرح هندسی راه", units: 2, type: "تخصصی الزامی", prereq: ["نقشه‌برداری و عملیات", "مکانیک خاک"] },
+      { name: "روسازی راه", units: 2, type: "تخصصی الزامی", prereq: ["مصالح و فرآورده‌های ساختمانی", "مکانیک خاک"] },
+      { name: "سازه بتن آرمه ۱", units: 3, type: "تخصصی الزامی", prereq: ["تکنولوژی بتن", "تحلیل سازه ۱"] },
+      { name: "سازه فولادی ۱", units: 3, type: "تخصصی الزامی", prereq: ["تحلیل سازه ۱"] },
+      { name: "مهندسی پی", units: 2, type: "تخصصی الزامی", prereq: ["سازه بتن آرمه ۱", "مکانیک خاک"] },
+      { name: "تحلیل سازه ۲ (مبانی مدل‌سازی)", units: 2, type: "اختیاری سازه", prereq: ["تحلیل سازه ۱", "محاسبات عددی"] },
+      { name: "تاریخ تحلیلی صدر اسلام", units: 2, type: "عمومی", prereq: [] },
+      { name: "آمادگی در برابر حوادث و سوانح", units: 0, type: "عمومی", prereq: [] },
+      { name: "ورزش ۱", units: 1, type: "عمومی", prereq: [] },
+    ]
+  },
+  {
+    title: "نیمسال ششم",
+    courses: [
+      { name: "آزمایشگاه مصالح و فرآورده‌های ساختمانی", units: 1, type: "تخصصی الزامی", prereq: ["مصالح و فرآورده‌های ساختمانی"] },
+      { name: "هیدرولیک و بناهای آبی", units: 3, type: "تخصصی الزامی", prereq: ["مکانیک سیالات", "مکانیک خاک"] },
+      { name: "هیدرولوژی مهندسی", units: 2, type: "تخصصی الزامی", prereq: ["مکانیک سیالات", "آمار و احتمال مهندسی"] },
+      { name: "سازه بتن آرمه ۲", units: 2, type: "تخصصی الزامی", prereq: ["سازه بتن آرمه ۱"] },
+      { name: "سازه فولادی ۲", units: 2, type: "تخصصی الزامی", prereq: ["سازه فولادی ۱"] },
+      { name: "اصول تصفیه آب و فاضلاب", units: 2, type: "اختیاری محیط زیست", prereq: ["اصول مهندسی آب و فاضلاب"] },
+      { name: "مهارت‌های نرم شغلی", units: 2, type: "مهارتی", prereq: [] },
+      { name: "کارآموزی ۱ (اخذ در تابستان)", units: 1, type: "مهارتی", prereq: [], note: "پس از گذراندن ۶۰ واحد" },
+      { name: "اندیشه اسلامی ۲ (نبوت و امامت)", units: 2, type: "عمومی", prereq: ["اندیشه اسلامی ۱ (مبدأ و معاد)"] },
+      { name: "علوم و معارف دفاع مقدس و مقاومت", units: 2, type: "عمومی", prereq: [] },
+    ]
+  },
+  {
+    title: "نیمسال هفتم",
+    courses: [
+      { name: "آزمایشگاه هیدرولیک و سیالات", units: 1, type: "تخصصی الزامی", prereq: ["هیدرولیک و بناهای آبی"] },
+      { name: "اصول زلزله‌شناسی و مهندسی زلزله", units: 3, type: "تخصصی الزامی", prereq: ["تحلیل سازه ۱", "زمین‌شناسی برای مهندسی عمران"] },
+      { name: "مقررات ملی ساختمان", units: 2, type: "اختیاری مصالح", prereq: [], note: "نیمسال هفتم به بعد" },
+      { name: "روش‌های اجرای گود و سازه نگهبان", units: 2, type: "اختیاری خاک", prereq: ["مهندسی پی"] },
+      { name: "بهسازی و تثبیت خاک", units: 2, type: "اختیاری خاک", prereq: ["مکانیک خاک"] },
+      { name: "مهندسی ترافیک", units: 2, type: "اختیاری راه", prereq: ["طرح هندسی راه"] },
+      { name: "مهندسی حمل و نقل", units: 2, type: "اختیاری راه", prereq: ["طرح هندسی راه", "آمار و احتمال مهندسی"] },
+      { name: "ماشین‌های آبی", units: 2, type: "اختیاری آب", prereq: ["مکانیک سیالات"] },
+      { name: "تفسیر موضوعی قرآن", units: 2, type: "عمومی", prereq: [] },
+    ]
+  },
+  {
+    title: "نیمسال هشتم",
+    courses: [
+      { name: "توسعه پایدار و آمایش سرزمین", units: 2, type: "تخصصی الزامی", prereq: [], note: "حداقل ۱۰۰ واحد گذرانده" },
+      { name: "متره و برآورد و پروژه", units: 1, type: "تخصصی الزامی", prereq: ["سازه فولادی ۲"] },
+      { name: "روش‌های اجرای ساختمان", units: 2, type: "تخصصی الزامی", prereq: ["سازه بتن آرمه ۲", "سازه فولادی ۲"] },
+      { name: "پروژه سازه فولادی", units: 1, type: "تخصصی الزامی", prereq: ["سازه فولادی ۲"] },
+      { name: "پروژه سازه بتن آرمه", units: 1, type: "تخصصی الزامی", prereq: ["سازه بتن آرمه ۲"] },
+      { name: "سازه‌های بنایی", units: 2, type: "اختیاری سازه", prereq: ["پروژه سازه بتن آرمه"] },
+      { name: "تحقیقات محلی", units: 2, type: "اختیاری خاک", prereq: ["آزمایشگاه مکانیک خاک"] },
+      { name: "آب‌های زیرزمینی و آبخوان", units: 2, type: "اختیاری آب", prereq: ["هیدرولوژی مهندسی", "مکانیک خاک"] },
+      { name: "کارآموزی ۲ (اخذ در تابستان)", units: 1, type: "مهارتی", prereq: ["کارآموزی ۱ (اخذ در تابستان)"] },
+      { name: "دانش خانواده و جمعیت", units: 2, type: "عمومی", prereq: [] },
+    ]
+  }
+];
+
+/* ============================================================
+   منطق اپ
+   ============================================================ */
+const chartEl = document.getElementById("chart");
+const allCourses = {};
+let totalUnits = 0;
+let termData = [];
+let toastTimer = null;
+
+function getBadgeClass(type) {
+  if (type === "پایه") return "badge-base";
+  if (type === "تخصصی الزامی") return "badge-core";
+  if (type.startsWith("اختیاری")) return "badge-opt";
+  if (type === "مهارتی") return "badge-skill";
+  return "badge-gen";
+}
+
+function showToast(msg = "💾 تغییرات ذخیره شد") {
+  const toast = document.getElementById("toast");
+  toast.textContent = msg;
+  toast.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove("show"), 1800);
+}
+
+function saveState() {
+  const passedNames = Object.keys(allCourses).filter(name => allCourses[name].done);
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(passedNames));
+  } catch (e) {}
+}
+
+function loadState() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+    if (Array.isArray(saved)) {
+      saved.forEach(name => {
+        if (allCourses[name]) {
+          allCourses[name].done = true;
+          allCourses[name].checkbox.checked = true;
+        }
+      });
+    }
+  } catch (e) {}
+}
+
+function buildChart() {
+  terms.forEach((term, ti) => {
+    const termDiv = document.createElement("div");
+    termDiv.className = "term";
+
+    const termTotalUnits = term.courses.reduce((s, c) => s + c.units, 0);
+    totalUnits += termTotalUnits;
+
+    const header = document.createElement("div");
+    header.className = "term-header";
+    header.innerHTML = `
+      <div class="term-title-group">
+        <h2>${term.title}</h2>
+        <span class="term-units-pill">${toFa(termTotalUnits)} واحد</span>
+      </div>
+      <button type="button" class="secondary term-check-btn" onclick="toggleTerm(${ti})">انتخاب دروس مجاز این ترم</button>
+    `;
+    termDiv.appendChild(header);
+
+    const tableWrap = document.createElement("div");
+    tableWrap.className = "table-responsive";
+
+    const table = document.createElement("table");
+    table.innerHTML = `
+      <thead><tr>
+        <th style="width:54px; text-align:center;">وضعیت</th>
+        <th>نام درس</th>
+        <th style="width:70px; text-align:center;">واحد</th>
+        <th style="width:145px;">دسته‌بندی</th>
+        <th>پیش‌نیاز / توضیحات</th>
+      </tr></thead>
+      <tbody></tbody>`;
+    const tbody = table.querySelector("tbody");
+
+    term.courses.forEach(c => {
+      const tr = document.createElement("tr");
+      tr.className = "course-row";
+
+      let prereqHtml = `<div class="prereq-list">`;
+      if (c.prereq.length) {
+        c.prereq.forEach(p => {
+          prereqHtml += `<span class="prereq-tag" data-prereq="${p}">${p}</span>`;
+        });
+      } else {
+        prereqHtml += `<span style="color:var(--muted); font-size:12px;">بدون پیش‌نیاز</span>`;
+      }
+      if (c.note) {
+        prereqHtml += `<span class="note-tag">📌 ${c.note}</span>`;
+      }
+      prereqHtml += `</div>`;
+
+      tr.innerHTML = `
+        <td class="col-chk" style="text-align:center;">
+          <div class="chk-wrap">
+            <input type="checkbox" class="chk" data-name="${c.name}" aria-label="${c.name}">
+          </div>
+        </td>
+        <td class="col-name">
+          <div class="course-name">
+            <span class="lock-icon"></span>
+            <span>${c.name}</span>
+          </div>
+        </td>
+        <td class="col-units" style="text-align:center; font-weight:700;">${toFa(c.units)}</td>
+        <td class="col-type"><span class="badge ${getBadgeClass(c.type)}">${c.type}</span></td>
+        <td class="col-prereq">${prereqHtml}</td>`;
+      tbody.appendChild(tr);
+
+      const cb = tr.querySelector(".chk");
+      allCourses[c.name] = {
+        name: c.name,
+        type: c.type,
+        rowEl: tr,
+        prereq: c.prereq,
+        units: c.units,
+        done: false,
+        unlocked: true,
+        checkbox: cb,
+        lockIcon: tr.querySelector(".lock-icon"),
+        prereqTags: Array.from(tr.querySelectorAll(".prereq-tag")),
+        termIndex: ti
+      };
+
+      tr.addEventListener("click", (e) => {
+        if (e.target.tagName === "INPUT") return;
+        if (!cb.disabled) {
+          cb.checked = !cb.checked;
+          cb.dispatchEvent(new Event("change"));
+        }
+      });
+    });
+
+    tableWrap.appendChild(table);
+    termDiv.appendChild(tableWrap);
+
+    const footer = document.createElement("div");
+    footer.className = "term-footer";
+    footer.innerHTML = `
+      <span class="chip">کل این ترم: <strong class="tf-total">${toFa(termTotalUnits)}</strong> واحد</span>
+      <span class="chip done">پاس‌شده: <strong class="tf-passed">۰</strong> واحد</span>
+      <span class="chip">مانده: <strong class="tf-rem">${toFa(termTotalUnits)}</strong> واحد</span>`;
+    termDiv.appendChild(footer);
+
+    termData.push({ div: termDiv, footer: footer, totalUnits: termTotalUnits, passed: 0 });
+    chartEl.appendChild(termDiv);
+  });
+
+  Object.values(allCourses).forEach(obj => {
+    obj.checkbox.addEventListener("change", () => {
+      obj.done = obj.checkbox.checked;
+      if (!obj.done) {
+        lockDependents(obj.name);
+      }
+      updateAll(true);
+    });
+  });
+
+  loadState();
+  updateAll(false);
+}
+
+function lockDependents(changedName) {
+  Object.values(allCourses).forEach(obj => {
+    if (obj.prereq.includes(changedName) && obj.done) {
+      obj.done = false;
+      obj.checkbox.checked = false;
+      lockDependents(obj.name);
+    }
+  });
+}
+
+function updateAll(shouldSave = false) {
+  let changed = true;
+  while (changed) {
+    changed = false;
+    Object.values(allCourses).forEach(obj => {
+      const unlocked = obj.prereq.every(p => allCourses[p] && allCourses[p].done);
+      obj.unlocked = unlocked;
+      if (!unlocked && obj.done) {
+        obj.done = false;
+        obj.checkbox.checked = false;
+        changed = true;
+      }
+    });
+  }
+
+  Object.values(allCourses).forEach(obj => {
+    if (obj.unlocked) {
+      obj.rowEl.classList.remove("locked");
+      obj.checkbox.disabled = false;
+      obj.lockIcon.textContent = obj.done ? "✅" : "";
+    } else {
+      obj.rowEl.classList.add("locked");
+      obj.checkbox.disabled = true;
+      obj.lockIcon.textContent = "🔒";
+    }
+
+    obj.rowEl.classList.toggle("passed-row", obj.done);
+
+    obj.prereqTags.forEach(tag => {
+      const pName = tag.getAttribute("data-prereq");
+      tag.classList.toggle("met", Boolean(allCourses[pName] && allCourses[pName].done));
+    });
+  });
+
+  let passedUnits = 0, passedCourses = 0;
+  const termPassed = termData.map(() => 0);
+
+  Object.values(allCourses).forEach(obj => {
+    if (obj.done) {
+      passedUnits += obj.units;
+      passedCourses++;
+      termPassed[obj.termIndex] += obj.units;
+    }
+  });
+
+  const remaining = totalUnits - passedUnits;
+  const pct = totalUnits > 0 ? Math.round((passedUnits / totalUnits) * 100) : 0;
+
+  document.getElementById("statTotal").textContent = toFa(totalUnits);
+  document.getElementById("statPassed").textContent = toFa(passedUnits);
+  document.getElementById("statRemaining").textContent = toFa(remaining);
+  document.getElementById("statCourses").textContent = toFa(passedCourses);
+
+  document.getElementById("progressPct").textContent = toFa(pct) + "٪";
+  document.getElementById("progressText").textContent = `${toFa(passedUnits)} از ${toFa(totalUnits)} واحد`;
+  document.getElementById("progressFill").style.width = pct + "%";
+
+  termData.forEach((td, i) => {
+    const p = termPassed[i];
+    const rem = td.totalUnits - p;
+    td.footer.querySelector(".tf-passed").textContent = toFa(p);
+    td.footer.querySelector(".tf-rem").textContent = toFa(rem);
+    const isComplete = p === td.totalUnits && td.totalUnits > 0;
+    td.div.classList.toggle("term-completed", isComplete);
+  });
+
+  updateToggleButtonText();
+  applyFilters();
+
+  if (shouldSave) {
+    saveState();
+    showToast();
+  }
+}
+
+function toggleTerm(termIndex) {
+  const termCourses = Object.values(allCourses).filter(c => c.termIndex === termIndex);
+  const unlockedCourses = termCourses.filter(c => c.unlocked);
+  const allUnlockedDone = unlockedCourses.length > 0 && unlockedCourses.every(c => c.done);
+
+  if (allUnlockedDone) {
+    termCourses.forEach(c => {
+      if (c.done) {
+        c.done = false;
+        c.checkbox.checked = false;
+        lockDependents(c.name);
+      }
+    });
+  } else {
+    unlockedCourses.forEach(c => {
+      c.done = true;
+      c.checkbox.checked = true;
+    });
+  }
+  updateAll(true);
+}
+
+function toggleAll() {
+  const allDone = Object.values(allCourses).every(obj => obj.done);
+  Object.values(allCourses).forEach(obj => {
+    obj.done = !allDone;
+    obj.checkbox.checked = !allDone;
+    if (!allDone) obj.checkbox.disabled = false;
+  });
+  updateAll(true);
+}
+
+function updateToggleButtonText() {
+  const btn = document.getElementById("toggleAllBtn");
+  if (!btn) return;
+  const allDone = Object.values(allCourses).every(obj => obj.done);
+  btn.textContent = allDone ? "❌ لغو انتخاب همه" : "✅ انتخاب همه";
+}
+
+function resetAll() {
+  Object.values(allCourses).forEach(obj => {
+    obj.done = false;
+    obj.checkbox.checked = false;
+  });
+  updateAll(true);
+  showToast("♻️ چارت بازنشانی شد");
+}
+
+function applyFilters() {
+  const query = document.getElementById("searchInput").value.trim();
+  const typeVal = document.getElementById("typeFilter").value;
+  const statusVal = document.getElementById("statusFilter").value;
+
+  let totalVisible = 0;
+
+  termData.forEach((td, ti) => {
+    let termVisibleCount = 0;
+    const coursesInTerm = Object.values(allCourses).filter(c => c.termIndex === ti);
+
+    coursesInTerm.forEach(c => {
+      const matchesSearch = !query ||
+        c.name.includes(query) ||
+        c.prereq.some(p => p.includes(query)) ||
+        c.type.includes(query);
+
+      const matchesType = typeVal === "all" ||
+        (typeVal === "اختیاری" ? c.type.startsWith("اختیاری") : c.type === typeVal);
+
+      let matchesStatus = true;
+      if (statusVal === "passed") matchesStatus = c.done;
+      else if (statusVal === "unlocked") matchesStatus = c.unlocked && !c.done;
+      else if (statusVal === "locked") matchesStatus = !c.unlocked;
+
+      const show = matchesSearch && matchesType && matchesStatus;
+      c.rowEl.style.display = show ? "" : "none";
+      if (show) {
+        termVisibleCount++;
+        totalVisible++;
+      }
+    });
+
+    td.div.style.display = termVisibleCount > 0 ? "" : "none";
+  });
+
+  document.getElementById("emptyState").style.display = totalVisible === 0 ? "block" : "none";
+}
+
+function exportPDF() {
+  showToast("⏳ در حال آماده‌سازی PDF...");
+  const wrapper = document.createElement("div");
+  wrapper.style.padding = "12px";
+  wrapper.style.background = "#1d2021";
+  wrapper.style.color = "#ebdbb2";
+  wrapper.style.direction = "rtl";
+
+  const titleClone = document.querySelector("header").cloneNode(true);
+  const statsClone = document.getElementById("stats").cloneNode(true);
+  const progClone = document.getElementById("progressSection").cloneNode(true);
+  const chartClone = document.getElementById("chart").cloneNode(true);
+
+  chartClone.querySelectorAll(".term-check-btn").forEach(b => b.remove());
+
+  wrapper.appendChild(titleClone);
+  wrapper.appendChild(statsClone);
+  wrapper.appendChild(progClone);
+  wrapper.appendChild(chartClone);
+
+  const opt = {
+    margin: [6, 6, 6, 6],
+    filename: 'chart-omran-fasa.pdf',
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2, backgroundColor: '#1d2021', useCORS: true },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+  };
+  html2pdf().set(opt).from(wrapper).save();
+}
+
+function toFa(n) {
+  return String(n).replace(/\d/g, d => "۰۱۲۳۴۵۶۷۸۹"[d]);
+}
+
+buildChart();
+</script>
+</body>
+</html>
