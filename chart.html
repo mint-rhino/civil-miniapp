@@ -5,9 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>چارت دروس مهندسی عمران - دانشگاه فسا</title>
 
-<!-- فونت سیستمی جایگزین Vazirmatn — حذف دو درخواست خارجی و CSS Font -->
-<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
-
 <style>
   :root {
     --bg: #1d2021;
@@ -465,7 +462,6 @@
     </div>
 
     <div class="toolbar">
-      <button onclick="exportPDF()">📄 خروجی PDF</button>
       <button id="toggleAllBtn" class="secondary" onclick="toggleAll()">✅ انتخاب همه</button>
       <button class="secondary danger" onclick="resetAll()">♻️ بازنشانی</button>
     </div>
@@ -714,7 +710,6 @@ function buildChart() {
 
   chartEl.appendChild(frag);
 
-  /* اتصال رویدادها به‌صورت delegation — بسیار سبک‌تر از listener جدا برای هر ردیف */
   chartEl.addEventListener("click", e => {
     const termBtn = e.target.closest(".term-check-btn");
     if (termBtn) { toggleTerm(+termBtn.dataset.term); return; }
@@ -741,7 +736,6 @@ function buildChart() {
   updateAll(false);
 }
 
-/* قفل کردن بازگشتی — iterative با stack برای جلوگیری از stack overflow */
 function lockDependents(changedName) {
   const stack = [changedName];
   while (stack.length) {
@@ -757,9 +751,7 @@ function lockDependents(changedName) {
   }
 }
 
-let rafPending = false;
 function updateAll(shouldSave) {
-  /* به‌روزرسانی وضعیت باز/قفل در یک پاس */
   for (const k in allCourses) {
     const o = allCourses[k];
     let unlocked = true;
@@ -771,7 +763,6 @@ function updateAll(shouldSave) {
     if (!unlocked && o.done) { o.done = false; o.checkbox.checked = false; }
   }
 
-  /* دوباره چک که آیا با حذف، وابسته‌ها هم باید پاک شن (تکرار تا پایداری) */
   let dirty = true, guard = 0;
   while (dirty && guard++ < 20) {
     dirty = false;
@@ -792,7 +783,6 @@ function updateAll(shouldSave) {
     }
   }
 
-  /* آپدیت DOM فقط برای تغییرات */
   let passedUnits = 0, passedCourses = 0;
   const termPassed = new Array(termData.length).fill(0);
 
@@ -924,44 +914,6 @@ function applyFilters() {
     if (termData[i].div.style.display !== d) termData[i].div.style.display = d;
   }
   document.getElementById("emptyState").style.display = totalVisible === 0 ? "block" : "none";
-}
-
-/* ============ PDF — لود تنبل ============ */
-let pdfLibLoaded = false;
-function loadPdfLib() {
-  return new Promise((resolve, reject) => {
-    if (pdfLibLoaded || window.html2pdf) { pdfLibLoaded = true; resolve(); return; }
-    const s = document.createElement("script");
-    s.src = "https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js";
-    s.async = true;
-    s.onload = () => { pdfLibLoaded = true; resolve(); };
-    s.onerror = reject;
-    document.head.appendChild(s);
-  });
-}
-
-async function exportPDF() {
-  showToast("⏳ در حال آماده‌سازی PDF...");
-  try { await loadPdfLib(); }
-  catch { showToast("❌ خطا در بارگذاری کتابخانه PDF"); return; }
-
-  const wrapper = document.createElement("div");
-  wrapper.style.cssText = "padding:12px;background:#1d2021;color:#ebdbb2;direction:rtl;";
-  wrapper.appendChild(document.querySelector("header").cloneNode(true));
-  wrapper.appendChild(document.getElementById("stats").cloneNode(true));
-  wrapper.appendChild(document.getElementById("progressSection").cloneNode(true));
-  const chartClone = document.getElementById("chart").cloneNode(true);
-  chartClone.querySelectorAll(".term-check-btn").forEach(b => b.remove());
-  chartClone.querySelectorAll(".term").forEach(t => { t.style.contentVisibility = "visible"; });
-  wrapper.appendChild(chartClone);
-
-  window.html2pdf().set({
-    margin: [6, 6, 6, 6],
-    filename: 'chart-omran-fasa.pdf',
-    image: { type: 'jpeg', quality: 0.95 },
-    html2canvas: { scale: 2, backgroundColor: '#1d2021', useCORS: true },
-    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-  }).from(wrapper).save();
 }
 
 buildChart();
