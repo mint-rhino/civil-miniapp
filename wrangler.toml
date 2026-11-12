@@ -1,5 +1,7 @@
-name = "civil-miniapp" 
-compatibility_date = "2026-11-12" 
+name = "civil-miniapp"
+main = "src/index.js"
+compatibility_date = "2026-11-01"
 
-[assets]
-directory = "./" 
+# binding برای Browser Rendering
+[browser]
+binding = "BROWSER"
