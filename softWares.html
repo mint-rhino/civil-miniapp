@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>نرم‌افزارها | منابع عمران فسا</title>
+
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg-dark: #121315;
+      --surface-card: #1c1d21;
+      --accent-yellow: #ffb703;
+      --accent-muted: rgba(255, 183, 3, 0.12);
+      --border-color: rgba(255, 255, 255, 0.08);
+      --text-main: #f1f5f9;
+      --text-sub: #94a3b8;
+      --radius-main: 12px;
+      --radius-sub: 8px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      font-family: 'Vazirmatn', system-ui, -apple-system, sans-serif;
+      background-color: var(--bg-dark);
+      background-image:
+        radial-gradient(rgba(255, 183, 3, 0.05) 1px, transparent 0),
+        linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 24px 24px, 12px 12px, 12px 12px;
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 20px 16px 40px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 440px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    header { text-align: center; margin-bottom: 8px; position: relative; }
+    .brand-title {
+      font-size: 22px; font-weight: 800; letter-spacing: -0.5px;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .brand-title span { color: var(--accent-yellow); }
+    .brand-subtitle { font-size: 12px; color: var(--text-sub); margin-top: 4px; }
+
+    .back-home {
+      position: absolute; top: 0; right: 0;
+      display: flex; align-items: center; gap: 4px;
+      padding: 6px 10px; font-size: 12px; font-weight: 600;
+      color: var(--accent-yellow);
+      background: var(--accent-muted);
+      border: 1px solid rgba(255, 183, 3, 0.3);
+      border-radius: var(--radius-sub);
+      text-decoration: none; transition: all .2s ease;
+    }
+    .back-home:active { background: var(--accent-yellow); color: #000; }
+
+    /* کارت نرم‌افزار */
+    .software-card {
+      border-radius: var(--radius-main);
+      border: 1px solid var(--border-color);
+      background: rgba(28, 29, 33, 0.6);
+      backdrop-filter: blur(12px);
+      overflow: hidden;
+      transition: border-color .25s ease;
+      animation: fadeIn .3s ease;
+    }
+    .software-card:hover,
+    .software-card:focus-within {
+      border-color: rgba(255, 183, 3, 0.35);
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* پیش‌نمایش */
+    .preview {
+      position: relative;
+      width: 100%;
+      height: 130px;
+      background: linear-gradient(135deg, #23252a, #18191c);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .preview-logo {
+      width: 64px; height: 64px;
+      border-radius: var(--radius-sub);
+      display: grid; place-items: center;
+      font-size: 30px; font-weight: 800;
+      color: #000;
+      background: var(--accent-yellow);
+      box-shadow: 0 6px 18px rgba(255, 183, 3, 0.25);
+    }
+    .preview-tag {
+      position: absolute;
+      top: 10px; left: 10px;
+      font-size: 10.5px;
+      background: rgba(0,0,0,0.55);
+      color: var(--accent-yellow);
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 183, 3, 0.35);
+      font-weight: 700;
+    }
+
+    /* بدنه */
+    .card-body { padding: 14px; }
+    .sw-name {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .sw-desc {
+      font-size: 12.5px;
+      color: var(--text-sub);
+      line-height: 1.7;
+      margin-bottom: 12px;
+    }
+
+    .btn-download {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 11px 14px;
+      background: var(--accent-muted);
+      border: 1px solid rgba(255, 183, 3, 0.3);
+      color: var(--accent-yellow);
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      border-radius: var(--radius-sub);
+      cursor: pointer;
+      text-decoration: none;
+      transition: all .2s ease;
+    }
+    .btn-download:active {
+      background: var(--accent-yellow);
+      color: #000;
+      border-color: var(--accent-yellow);
+      transform: scale(0.98);
+    }
+
+    /* هشدار */
+    .notice {
+      font-size: 11px;
+      color: var(--text-sub);
+      background: rgba(255, 183, 3, 0.06);
+      border: 1px dashed rgba(255, 183, 3, 0.3);
+      border-radius: var(--radius-sub);
+      padding: 10px 12px;
+      line-height: 1.8;
+      margin-top: 6px;
+    }
+    .notice b { color: var(--accent-yellow); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <a href="index.html" class="back-home">→ بازگشت</a>
+      <div class="brand-title">💻 نرم‌افزارهای <span>عمران</span></div>
+      <div class="brand-subtitle">دانلود نسخه‌های پرکاربرد مهندسی عمران</div>
+    </header>
+
+    <!-- AutoCAD -->
+    <div class="software-card">
+      <div class="preview">
+        <div class="preview-logo" style="background:#d63031; color:#fff;">A</div>
+      </div>
+      <div class="card-body">
+        <div class="sw-name">AutoCAD</div>
+        <div class="sw-desc">نرم‌افزار ترسیم و طراحی نقشه‌های دوبعدی و سه‌بعدی برای مهندسان عمران و معماران.</div>
+        <a class="btn-download" href="https://soft98.ir/software/engineering/2355-%D8%A7%D8%AA%D9%88%DA%A9%D8%AF-%D9%BE%D9%86%D8%AC.html" target="_blank" rel="noopener">
+          ⬇️ دانلود از Soft98
+        </a>
+      </div>
+    </div>
+
+    <!-- MATLAB -->
+    <div class="software-card">
+      <div class="preview">
+        <div class="preview-logo" style="background:#e16737; color:#fff;">M</div>
+        <span class="preview-tag">پرطرفدار</span>
+      </div>
+      <div class="card-body">
+        <div class="sw-name">MATLAB</div>
+        <div class="sw-desc">محیط برنامه‌نویسی و محاسبات عددی برای تحلیل، مدل‌سازی و شبیه‌سازی مسائل مهندسی.</div>
+        <a class="btn-download" href="https://soft98.ir/software/engineering/1291-%D8%AF%D8%A7%D9%86%D9%84%D9%88%E2%80%8C%D8%AF%E2%80%8C-%D9%85%D8%AA%D9%84%D8%A8-%D9%87%D9%81%D8%AA.html" target="_blank" rel="noopener">
+          ⬇️ دانلود از Soft98
+        </a>
+      </div>
+    </div>
+
+    <!-- CSI SAFE -->
+    <div class="software-card">
+      <div class="preview">
+        <div class="preview-logo" style="background:#6c5ce7; color:#fff;">SA</div>
+        <span class="preview-tag">تخصصی سازه</span>
+      </div>
+      <div class="card-body">
+        <div class="sw-name">CSI SAFE</div>
+        <div class="sw-desc">طراحی دال‌ها، فونداسیون‌ها و سیستم‌های پیچیده‌ی سازه‌ای با دقت بالا.</div>
+        <a class="btn-download" href="https://soft98.ir/software/engineering/3404-csi_safe.html" target="_blank" rel="noopener">
+          ⬇️ دانلود از Soft98
+        </a>
+      </div>
+    </div>
+
+    <!-- CSI ETABS -->
+    <div class="software-card">
+      <div class="preview">
+        <div class="preview-logo" style="background:#0984e3; color:#fff;">E</div>
+        <span class="preview-tag">تخصصی سازه</span>
+      </div>
+      <div class="card-body">
+        <div class="sw-name">CSI ETABS</div>
+        <div class="sw-desc">نرم‌افزار تحلیل و طراحی سازه‌های ساختمانی؛ پرکاربردترین ابزار مهندسی سازه.</div>
+        <a class="btn-download" href="https://soft98.ir/software/engineering/2361-csi-etabs.html" target="_blank" rel="noopener">
+          ⬇️ دانلود از Soft98
+        </a>
+      </div>
+    </div>
+
+    <!-- Google Earth -->
+    <div class="software-card">
+      <div class="preview">
+        <div class="preview-logo" style="background:#00b894; color:#fff;">G</div>
+      </div>
+      <div class="card-body">
+        <div class="sw-name">Google Earth</div>
+        <div class="sw-desc">مشاهده‌ی تصاویر ماهواره‌ای و نقشه‌های سه‌بعدی زمین برای مطالعات و بررسی محلی پروژه‌ها.</div>
+        <a class="btn-download" href="https://soft98.ir/internet/325-google-earth.html" target="_blank" rel="noopener">
+          ⬇️ دانلود از Soft98
+        </a>
+      </div>
+    </div>
+
+    <div class="notice">
+      ⚠️ <b>توجه:</b> لینک‌های دانلود از سایت Soft98 هستن و به‌روزرسانی نسخه‌ها توسط اون سایت انجام می‌شه. قبل از نصب، حتماً بخش «راهنمای نصب» همون صفحه رو بخونید. این مینی‌اپ فقط نقش معرفی و دسترسی سریع داره.
+    </div>
+
+    <!--
+    ============================================================
+    📌 قالب اضافه‌کردن نرم‌افزار جدید
+    ============================================================
+    برای اضافه‌کردن نرم‌افزار، این بلاک رو کپی کن و **قبل از**
+    <div class="notice"> بچسبون. فقط ۴ چیز رو عوض کن:
+
+      1. color    → رنگ برند نرم‌افزار (کد hex)
+      2. initial  → حرف اول اسم نرم‌افزار (یا ۲ حرف مثل SA)
+      3. name     → اسم نرم‌افزار
+      4. desc     → توضیح کوتاه یک‌خطی
+      5. url      → لینک دانلود
+      6. tag      → (اختیاری) برچسب بالای کارت؛ اگه نمی‌خوای،
+                    کل خط <span class="preview-tag">...</span> رو حذف کن
+
+    <div class="software-card">
+      <div class="preview">
+        <div class="preview-logo" style="background:#COLOR; color:#fff;">INITIAL</div>
+        <span class="preview-tag">TAG</span>
+      </div>
+      <div class="card-body">
+        <div class="sw-name">NAME</div>
+        <div class="sw-desc">DESC</div>
+        <a class="btn-download" href="URL" target="_blank" rel="noopener">
+          ⬇️ دانلود از Soft98
+        </a>
+      </div>
+    </div>
+    ============================================================
+    -->
+  </div>
+
+  <script>
+    if (window.Telegram && Telegram.WebApp) {
+      Telegram.WebApp.ready();
+      Telegram.WebApp.BackButton.show();
+      Telegram.WebApp.BackButton.onClick(() => window.location.href = "index.html");
+    }
+  </script>
+</body>
+</html>
