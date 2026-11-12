@@ -1,11 +1,5 @@
-name = "civil-miniapp"
-main = "src/index.js"
-compatibility_date = "2026-11-01"
+name = "civil-miniapp" 
+compatibility_date = "2026-11-12" 
 
-[browser]
-binding = "BROWSER"
-
-# R2 binding
-[[r2_buckets]]
-binding = "PDF_BUCKET"
-bucket_name = "civil-pdfs"
+[assets]
+directory = "./" 
