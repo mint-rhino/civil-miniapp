@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>دفتر تلفن | دانشگاه فسا</title>
+
+  <!-- SDK تلگرام -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+  <!-- فونت وزیرمتن -->
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ============================================================
+       🎨 تم اصلی پروژه (همون :root مینی‌اپ)
+       ============================================================ */
+    :root {
+      --bg-dark: #121315;
+      --surface-card: #1c1d21;
+      --accent-yellow: #ffb703;
+      --accent-muted: rgba(255, 183, 3, 0.12);
+      --border-color: rgba(255, 255, 255, 0.08);
+      --text-main: #f1f5f9;
+      --text-sub: #94a3b8;
+      --radius-main: 12px;
+      --radius-sub: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: 'Vazirmatn', system-ui, -apple-system, sans-serif;
+      background-color: var(--bg-dark);
+      background-image:
+        radial-gradient(rgba(255, 183, 3, 0.05) 1px, transparent 0),
+        linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 24px 24px, 12px 12px, 12px 12px;
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 20px 16px 40px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 440px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* ─── هدر ─── */
+    header {
+      text-align: center;
+      margin-bottom: 8px;
+      position: relative;
+    }
+    .brand-title {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .brand-title span { color: var(--accent-yellow); }
+    .brand-subtitle {
+      font-size: 12px;
+      color: var(--text-sub);
+      margin-top: 4px;
+    }
+
+    /* دکمه‌ی بازگشت به صفحه اصلی (بالا-راست) */
+    .back-home {
+      position: absolute;
+      top: 0;
+      right: 0;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 6px 10px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--accent-yellow);
+      background: var(--accent-muted);
+      border: 1px solid rgba(255, 183, 3, 0.3);
+      border-radius: var(--radius-sub);
+      text-decoration: none;
+      transition: all .2s ease;
+    }
+    .back-home:active {
+      background: var(--accent-yellow);
+      color: #000;
+    }
+
+    /* ─── نوار جستجو ─── */
+    .search-wrap {
+      position: relative;
+      border-radius: var(--radius-main);
+      border: 1px solid var(--border-color);
+      background: rgba(28, 29, 33, 0.6);
+      backdrop-filter: blur(12px);
+      transition: border-color .25s ease;
+    }
+    .search-wrap:focus-within {
+      border-color: rgba(255, 183, 3, 0.4);
+    }
+    .search-wrap input {
+      width: 100%;
+      padding: 14px 42px 14px 16px;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--text-main);
+      font-family: inherit;
+      font-size: 14px;
+    }
+    .search-wrap input::placeholder { color: var(--text-sub); }
+    .search-icon {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-sub);
+      font-size: 15px;
+      pointer-events: none;
+    }
+
+    /* ─── شمارنده ─── */
+    .count-bar {
+      font-size: 12px;
+      color: var(--text-sub);
+      padding: 0 4px;
+    }
+    .count-bar b { color: var(--accent-yellow); }
+
+    /* ─── لیست کارت‌ها ─── */
+    .list { display: flex; flex-direction: column; gap: 10px; }
+
+    .card {
+      border-radius: var(--radius-main);
+      border: 1px solid var(--border-color);
+      background: rgba(28, 29, 33, 0.6);
+      backdrop-filter: blur(12px);
+      padding: 14px;
+      transition: border-color .25s ease;
+      animation: fadeIn .25s ease;
+    }
+    .card:hover, .card:focus-within {
+      border-color: rgba(255, 183, 3, 0.35);
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .card-top {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .avatar {
+      width: 40px; height: 40px;
+      border-radius: var(--radius-sub);
+      display: grid; place-items: center;
+      font-weight: 800;
+      color: #000;
+      background: var(--accent-yellow);
+      flex-shrink: 0;
+      font-size: 16px;
+    }
+    .name {
+      font-weight: 700;
+      font-size: 14.5px;
+      color: var(--text-main);
+    }
+    .role {
+      font-size: 12px;
+      color: var(--text-sub);
+      margin-top: 2px;
+    }
+    .phone {
+      direction: ltr;
+      text-align: right;
+      font-family: 'Vazirmatn', monospace;
+      font-size: 13px;
+      color: var(--text-sub);
+      margin: 6px 0 10px;
+      letter-spacing: 1px;
+    }
+
+    .actions { display: flex; gap: 8px; }
+    .btn {
+      flex: 1;
+      padding: 11px 10px;
+      border-radius: var(--radius-sub);
+      border: 1px solid var(--border-color);
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--text-main);
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all .2s ease;
+    }
+    .btn:active { transform: scale(0.98); }
+
+    .btn-call {
+      background: var(--accent-muted);
+      border-color: rgba(255, 183, 3, 0.3);
+      color: var(--accent-yellow);
+    }
+    .btn-call:active {
+      background: var(--accent-yellow);
+      color: #000;
+    }
+    .btn-copy:active {
+      background: var(--accent-yellow);
+      color: #000;
+      border-color: var(--accent-yellow);
+    }
+
+    .empty {
+      text-align: center;
+      color: var(--text-sub);
+      padding: 30px 0;
+      font-size: 13px;
+    }
+
+    /* ─── Toast ─── */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(120%);
+      background: var(--accent-yellow);
+      color: #000;
+      padding: 10px 18px;
+      border-radius: var(--radius-sub);
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      opacity: 0;
+      transition: transform .3s, opacity .3s;
+      z-index: 100;
+      pointer-events: none;
+      box-shadow: 0 8px 24px rgba(255, 183, 3, 0.25);
+    }
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <a href="index.html" class="back-home">→ بازگشت</a>
+      <div class="brand-title">📒 دفتر تلفن <span>دانشگاه فسا</span></div>
+      <div class="brand-subtitle">مسئولین و اساتید — تماس سریع</div>
+    </header>
+
+    <div class="search-wrap">
+      <input type="search" id="search" placeholder="جستجوی نام، سمت یا شماره..." autocomplete="off" />
+      <span class="search-icon">🔍</span>
+    </div>
+
+    <div class="count-bar" id="countBar"></div>
+
+    <section class="list" id="list"></section>
+    <p class="empty" id="empty" hidden>موردی پیدا نشد 🤷</p>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    "use strict";
+
+    /* ============================================================
+       📞 داده‌های دفتر تلفن
+       ============================================================ */
+    const CONTACTS = [
+      { id: 1,  name: "آقای پویا",        role: "خوابگاه پسران",     phone: "+989366019642" },
+      { id: 2,  name: "خانم باصری",       role: "خوابگاه دختران",    phone: "+989171311734" },
+      { id: 3,  name: "خانم کریمیان",     role: "بخش تربیت بدنی",    phone: "+989307122840" },
+      { id: 4,  name: "آقای اسکندری",     role: "کارشناس عمران",     phone: "+989177084272" },
+      { id: 5,  name: "آقای تهمتن",       role: "ارتباط با صنعت",    phone: "+989177314638" },
+      { id: 6,  name: "آقای حسن‌نژاد",    role: "کتابخانه",          phone: "+989173302499" },
+      { id: 7,  name: "خانم شفیعی",       role: "سلف",               phone: "+989178327179" },
+      { id: 8,  name: "خانم رحیمی",       role: "آموزش",             phone: "+989173329586" },
+      { id: 9,  name: "خانم مصلی‌نژاد",   role: "انتشارات",          phone: "+989177965528" },
+      { id: 10, name: "استاد نیکزاد",     role: "استاد تخصصی",       phone: "+989178948488" },
+      { id: 11, name: "استاد محبی",       role: "استاد تخصصی",       phone: "+989122501631" },
+      { id: 12, name: "استاد جوکار",      role: "استاد تخصصی",       phone: "+989920559320" },
+      { id: 13, name: "استاد پورباقری",   role: "استاد تخصصی",       phone: "+989215651712" },
+      { id: 14, name: "استاد قوهستانی",   role: "استاد تخصصی",       phone: "+989177811745" },
+      { id: 15, name: "استاد مصلحی",      role: "استاد تخصصی",       phone: "+989172628190" },
+      { id: 16, name: "استاد قبادی‌پور",  role: "استاد تخصصی",       phone: "+989367880941" },
+      { id: 17, name: "استاد دهیار",      role: "استاد تخصصی",       phone: "+989171081503" },
+      { id: 18, name: "استاد علی‌زاده",   role: "استاد عمومی",       phone: "+989175644890" },
+      { id: 19, name: "استاد تقواطلب",    role: "استاد عمومی",       phone: "+989352227983" },
+      { id: 20, name: "استاد مقدم",       role: "استاد عمومی",       phone: "+989173309023" },
+      { id: 21, name: "استاد محمدی",      role: "استاد عمومی",       phone: "+989177316885" },
+      { id: 22, name: "استاد اسلامی‌پور", role: "استاد عمومی",       phone: "+989177316884" },
+      { id: 23, name: "استاد رشیدی",      role: "استاد عمومی",       phone: "+989133643631" },
+      { id: 24, name: "استاد مظلومی",     role: "استاد عمومی",       phone: "+989171347122" },
+    ];
+
+    /* ============================================================
+       Helpers
+       ============================================================ */
+    function normalizeFa(s) {
+      return String(s).toLowerCase()
+        .replace(/ي/g, "ی").replace(/ك/g, "ک")
+        .replace(/[ًٌٍَُِّْ]/g, "").trim();
+    }
+    function formatPhoneFa(phone) {
+      const digits = phone.replace(/\D/g, "");
+      const local = "0" + digits.slice(2);
+      return local.replace(/\d/g, d => "۰۱۲۳۴۵۶۷۸۹"[d])
+                  .replace(/^(\d{4})(\d{3})(\d+)$/, "$1 $2 $3");
+    }
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, m => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+      }[m]));
+    }
+
+    /* ============================================================
+       DOM
+       ============================================================ */
+    const $list   = document.getElementById("list");
+    const $search = document.getElementById("search");
+    const $empty  = document.getElementById("empty");
+    const $count  = document.getElementById("countBar");
+    const $toast  = document.getElementById("toast");
+
+    let query = "";
+    let toastTimer;
+    function toast(msg) {
+      $toast.textContent = msg;
+      $toast.classList.add("show");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => $toast.classList.remove("show"), 1800);
+    }
+
+    /* ============================================================
+       Render
+       ============================================================ */
+    function getFiltered() {
+      const q = normalizeFa(query);
+      if (!q) return CONTACTS;
+      return CONTACTS.filter(c =>
+        normalizeFa(c.name).includes(q) ||
+        normalizeFa(c.role).includes(q) ||
+        c.phone.includes(q)
+      );
+    }
+
+    function render() {
+      const list = getFiltered();
+      $count.innerHTML = `مجموع <b>${CONTACTS.length}</b> شماره — نمایش <b>${list.length}</b>`;
+      $list.innerHTML = "";
+      $empty.hidden = list.length > 0;
+      list.forEach(c => $list.appendChild(renderCard(c)));
+    }
+
+    function renderCard(c) {
+      const initial = c.name.replace(/^(آقای|خانم|استاد)\s+/, "").charAt(0);
+      const card = document.createElement("article");
+      card.className = "card";
+      card.innerHTML = `
+        <div class="card-top">
+          <div class="avatar">${initial}</div>
+          <div style="flex:1;min-width:0">
+            <div class="name">${escapeHtml(c.name)}</div>
+            <div class="role">${escapeHtml(c.role)}</div>
+          </div>
+        </div>
+        <div class="phone" dir="ltr">${formatPhoneFa(c.phone)}</div>
+        <div class="actions">
+          <a class="btn btn-call" href="tel:${c.phone}">📞 تماس</a>
+          <button class="btn btn-copy" type="button">📋 کپی شماره</button>
+        </div>
+      `;
+      card.querySelector(".btn-copy").addEventListener("click", () => copyPhone(c.phone));
+      return card;
+    }
+
+    /* ============================================================
+       Copy
+       ============================================================ */
+    function copyPhone(phone) {
+      const done = () => toast("شماره کپی شد ✅");
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(phone).then(done).catch(() => fallbackCopy(phone, done));
+      } else fallbackCopy(phone, done);
+    }
+    function fallbackCopy(text, cb) {
+      const ta = document.createElement("textarea");
+      ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand("copy"); cb(); }
+      catch { toast("کپی نشد ❌"); }
+      document.body.removeChild(ta);
+    }
+
+    /* ============================================================
+       Events
+       ============================================================ */
+    $search.addEventListener("input", e => { query = e.target.value; render(); });
+    $search.addEventListener("keydown", e => {
+      if (e.key === "Escape") { $search.value = ""; query = ""; render(); }
+    });
+
+    /* ============================================================
+       Init + Telegram BackButton
+       ============================================================ */
+    render();
+
+    if (window.Telegram && Telegram.WebApp) {
+      Telegram.WebApp.ready();
+      Telegram.WebApp.BackButton.show();
+      Telegram.WebApp.BackButton.onClick(() => {
+        window.location.href = "index.html";
+      });
+    }
+  </script>
+</body>
+</html>
