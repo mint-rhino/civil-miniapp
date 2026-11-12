@@ -51,3 +51,16 @@ function toggleAccordion(btn, menuId) {
         targetMenu.style.maxHeight = targetMenu.scrollHeight + "px";
     }
 }
+
+function openChart() {
+    const modal = document.getElementById('chartModal');
+    const frame = document.getElementById('chartFrame');
+    // مسیر نسبی فایل چارت — اگر نام فایل را انگلیسی کردید اینجا هم تغییر دهید
+    if (!frame.src) frame.src = 'چارت عمران.html';
+    modal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+}
+function closeChart() {
+    document.getElementById('chartModal').classList.remove('open');
+    document.body.style.overflow = '';
+}
