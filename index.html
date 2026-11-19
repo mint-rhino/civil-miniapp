@@ -2,163 +2,162 @@
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>منابع عمران فسا</title>
+    <meta name="theme-color" content="#121315">
 
-    <!-- SDK تلگرام -->
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-
-    <!-- فونت وزیرمتن -->
+    <!-- اتصال سریع به فونت‌ها -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;800&display=swap" rel="stylesheet">
 
-    <!-- فایل استایل جداگانه -->
+    <!-- SDK تلگرام (غیرمسدودکننده) -->
+    <script src="https://telegram.org/js/telegram-web-app.js" defer></script>
+
+    <!-- استایل اصلی -->
     <link rel="stylesheet" href="style.css">
 
-    <!-- استایل مودال چارت -->
-    <style>
-        .chart-modal { position: fixed; inset: 0; z-index: 9999; background: #1d2021; display: none; flex-direction: column; }
-        .chart-modal.open { display: flex; }
-        .chart-modal-bar { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: #282828; border-bottom: 1px solid rgba(235,219,178,.15); flex-shrink: 0; }
-        .chart-modal-title { font-weight: 700; font-size: 14px; color: #ebdbb2; }
-        .chart-back-btn { background: rgba(235,219,178,.08); border: 1px solid rgba(235,219,178,.22); color: #ebdbb2; padding: 6px 12px; border-radius: 8px; font-size: 13px; cursor: pointer; }
-        .chart-frame { flex: 1; width: 100%; border: 0; background: #1d2021; }
-    </style>
+    <!-- اسکریپت اصلی -->
+    <script src="script.js" defer></script>
 </head>
 <body>
 
-    <div class="container">
+    <main class="container">
         <!-- هدر -->
         <header>
-            <div class="brand-title">
-                <span>🏗️</span> منابع عمران فسا
-            </div>
-            <div class="brand-subtitle">پورتال دسترسی سریع به گروه‌ها و سامانه‌ها</div>
+            <h1 class="brand-title">
+                <span aria-hidden="true">🏗️</span>
+                <span>منابع عمران فسا</span>
+            </h1>
+            <p class="brand-subtitle">پورتال دسترسی سریع به گروه‌ها و سامانه‌ها</p>
         </header>
 
         <!-- بخش ۱: منابع درسی -->
-        <div class="accordion-group">
-            <button class="btn-trigger" onclick="toggleAccordion(this, 'menu-study')">
-                <div class="btn-title">
-                    <span class="icon">📚</span>
+        <section class="accordion-group">
+            <button type="button" class="btn-trigger" aria-expanded="false" aria-controls="menu-study" onclick="toggleAccordion(this, 'menu-study')">
+                <span class="btn-title">
+                    <span class="icon" aria-hidden="true">📚</span>
                     <span>منابع درسی</span>
-                </div>
-                <svg class="chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </span>
+                <svg class="chevron" viewBox="0 0 24 24" aria-hidden="true">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
             </button>
             <div id="menu-study" class="submenu-content">
                 <div class="submenu-inner">
-                    <button class="item-btn" onclick="openTopic('https://t.me/CivilFasa_resources/2')">
-                        <span>🧑‍🔬  فیزیک / استاتیک / دینامیک</span>
-                        <span class="link-arrow">←</span>
+                    <button type="button" class="item-btn" onclick="openTopic('https://t.me/CivilFasa_resources/2')">
+                        <span>🧑‍🔬 فیزیک / استاتیک / دینامیک</span>
+                        <span class="link-arrow" aria-hidden="true">←</span>
                     </button>
-                    <button class="item-btn" onclick="openTopic('https://t.me/CivilFasa_resources/295')">
+                    <button type="button" class="item-btn" onclick="openTopic('https://t.me/CivilFasa_resources/295')">
                         <span>📋 نظام مهندسی</span>
-                        <span class="link-arrow">←</span>
+                        <span class="link-arrow" aria-hidden="true">←</span>
                     </button>
-                    <button class="item-btn" onclick="openTopic('https://t.me/CivilFasa_resources/498')">
+                    <button type="button" class="item-btn" onclick="openTopic('https://t.me/CivilFasa_resources/498')">
                         <span>🏗️ مقاومت مصالح</span>
-                        <span class="link-arrow">←</span>
+                        <span class="link-arrow" aria-hidden="true">←</span>
                     </button>
-                    <button class="item-btn" onclick="openTopic('https://t.me/CivilFasa_resources/93')">
+                    <button type="button" class="item-btn" onclick="openTopic('https://t.me/CivilFasa_resources/93')">
                         <span>🛠️ دروس عملی و کارآموزی</span>
-                        <span class="link-arrow">←</span>
+                        <span class="link-arrow" aria-hidden="true">←</span>
                     </button>
-                    <button class="item-btn" onclick="openTopic('https://t.me/CivilFasa_resources/3')">
+                    <button type="button" class="item-btn" onclick="openTopic('https://t.me/CivilFasa_resources/3')">
                         <span>📐 ریاضی / آمار / دیفرانسیل</span>
-                        <span class="link-arrow">←</span>
+                        <span class="link-arrow" aria-hidden="true">←</span>
                     </button>
-                    <button class="item-btn" onclick="openTopic('https://t.me/CivilFasa_resources/6')">
+                    <button type="button" class="item-btn" onclick="openTopic('https://t.me/CivilFasa_resources/6')">
                         <span>📏 نقشه‌کشی / معماری / نقشه‌برداری</span>
-                        <span class="link-arrow">←</span>
+                        <span class="link-arrow" aria-hidden="true">←</span>
                     </button>
-                    <button class="item-btn" onclick="openTopic('https://t.me/CivilFasa_resources/80')">
+                    <button type="button" class="item-btn" onclick="openTopic('https://t.me/CivilFasa_resources/80')">
                         <span>🪨 زمین‌شناسی / مصالح / بتن</span>
-                        <span class="link-arrow">←</span>
+                        <span class="link-arrow" aria-hidden="true">←</span>
                     </button>
                 </div>
             </div>
-        </div>
+        </section>
 
         <!-- بخش ۲: سامانه‌ها -->
-        <div class="accordion-group">
-            <button class="btn-trigger" onclick="toggleAccordion(this, 'menu-systems')">
-                <div class="btn-title">
-                    <span class="icon">🌐</span>
+        <section class="accordion-group">
+            <button type="button" class="btn-trigger" aria-expanded="false" aria-controls="menu-systems" onclick="toggleAccordion(this, 'menu-systems')">
+                <span class="btn-title">
+                    <span class="icon" aria-hidden="true">🌐</span>
                     <span>سامانه‌های دانشگاه</span>
-                </div>
-                <svg class="chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </span>
+                <svg class="chevron" viewBox="0 0 24 24" aria-hidden="true">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
             </button>
             <div id="menu-systems" class="submenu-content">
                 <div class="submenu-inner">
-                    <button class="item-btn" onclick="openExternal('https://food.fasau.ac.ir/')">
+                    <button type="button" class="item-btn" onclick="openExternal('https://food.fasau.ac.ir/')">
                         <span>🍽️ کالینان (سامانه غذا)</span>
-                        <span class="link-arrow">↗</span>
+                        <span class="link-arrow" aria-hidden="true">↗</span>
                     </button>
-                    <button class="item-btn" onclick="openExternal('https://pershiess.fasau.ac.ir/')">
+                    <button type="button" class="item-btn" onclick="openExternal('https://pershiess.fasau.ac.ir/')">
                         <span>📖 اتوماسیون (آموزش)</span>
-                        <span class="link-arrow">↗</span>
+                        <span class="link-arrow" aria-hidden="true">↗</span>
                     </button>
-                    <button class="item-btn" onclick="openExternal('http://online.fasau.ac.ir/')">
+                    <button type="button" class="item-btn" onclick="openExternal('http://online.fasau.ac.ir/')">
                         <span>💻 مودل (امتحانات)</span>
-                        <span class="link-arrow">↗</span>
+                        <span class="link-arrow" aria-hidden="true">↗</span>
                     </button>
-                    <button class="item-btn" onclick="openExternal('https://ja-ostadi.ir/')">
+                    <button type="button" class="item-btn" onclick="openExternal('https://ja-ostadi.ir/')">
                         <span>👨‍🏫 جا استادی</span>
-                        <span class="link-arrow">↗</span>
+                        <span class="link-arrow" aria-hidden="true">↗</span>
                     </button>
                 </div>
             </div>
-        </div>
+        </section>
 
         <!-- بخش ۳: نرم‌افزارها -->
         <div class="accordion-group single-btn">
-            <button class="btn-trigger" onclick="window.location.href='software.html'">
-                <div class="btn-title">
-                    <span class="icon">💻</span>
+            <button type="button" class="btn-trigger" onclick="navigateTo('software.html')">
+                <span class="btn-title">
+                    <span class="icon" aria-hidden="true">💻</span>
                     <span>نرم‌افزارها</span>
-                </div>
-                <span class="link-arrow" style="color: var(--text-sub);">←</span>
+                </span>
+                <span class="link-arrow" aria-hidden="true">←</span>
             </button>
         </div>
 
         <!-- بخش ۴: چارت دروس -->
         <div class="accordion-group single-btn">
-            <button class="btn-trigger" onclick="openChart()">
-                <div class="btn-title">
-                    <span class="icon">📊</span>
+            <button type="button" class="btn-trigger" onclick="openChart()">
+                <span class="btn-title">
+                    <span class="icon" aria-hidden="true">📊</span>
                     <span>چارت دروس عمران</span>
-                </div>
-                <span class="link-arrow" style="color: var(--text-sub);">←</span>
+                </span>
+                <span class="link-arrow" aria-hidden="true">←</span>
             </button>
         </div>
 
         <!-- بخش ۵: دفتر تلفن -->
         <div class="accordion-group single-btn">
-            <button class="btn-trigger" onclick="window.location.href='phoneBook.html'">
-                <div class="btn-title">
-                    <span class="icon">📒</span>
+            <button type="button" class="btn-trigger" onclick="navigateTo('phoneBook.html')">
+                <span class="btn-title">
+                    <span class="icon" aria-hidden="true">📒</span>
                     <span>دفتر تلفن دانشگاه</span>
-                </div>
-                <span class="link-arrow" style="color: var(--text-sub);">←</span>
+                </span>
+                <span class="link-arrow" aria-hidden="true">←</span>
             </button>
         </div>
-                <!-- فوتر -->
+
+        <!-- فوتر -->
         <footer class="app-footer">
             گردآوری و توسعه توسط <strong>کوشا آریاپور</strong>
         </footer>
-    </div>  <!-- ← container حالا درست بعد از همه‌ی دکمه‌ها بسته می‌شه -->
+    </main>
 
-    <!-- مودال چارت (داخل body، آخر صفحه) -->
-    <div id="chartModal" class="chart-modal">
+    <!-- مودال چارت -->
+    <div id="chartModal" class="chart-modal" role="dialog" aria-modal="true" aria-labelledby="chartModalTitle" aria-hidden="true">
         <div class="chart-modal-bar">
-            <button class="chart-back-btn" onclick="closeChart()">→ بازگشت</button>
-            <span class="chart-modal-title">چارت دروس عمران</span>
-            <span style="width:70px;"></span>
+            <button type="button" class="chart-back-btn" onclick="closeChart()">→ بازگشت</button>
+            <span id="chartModalTitle" class="chart-modal-title">چارت دروس عمران</span>
+            <span class="chart-modal-spacer" aria-hidden="true"></span>
         </div>
-        <iframe id="chartFrame" class="chart-frame" src="" title="چارت دروس عمران"></iframe>
+        <iframe id="chartFrame" class="chart-frame" src="" loading="lazy" title="چارت دروس عمران"></iframe>
     </div>
 
-    <!-- فایل جاوااسکریپت جداگانه -->
-    <script src="script.js"></script>
 </body>
 </html>
-
