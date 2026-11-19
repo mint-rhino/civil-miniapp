@@ -46,6 +46,29 @@ body {
     overflow-x: hidden;
 }
 
+/* ─── تعریف انیمیشن‌های سبک ─── */
+@keyframes fadeSlideUp {
+    from {
+        opacity: 0;
+        transform: translate3d(0, 12px, 0);
+    }
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: scale3d(0.97, 0.97, 1);
+    }
+    to {
+        opacity: 1;
+        transform: scale3d(1, 1, 1);
+    }
+}
+
 .container {
     width: 100%;
     max-width: clamp(300px, 92vw, 480px);
@@ -58,6 +81,7 @@ body {
 header {
     text-align: center;
     margin-bottom: clamp(14px, 3vw, 24px);
+    animation: fadeSlideUp 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .brand-title {
@@ -90,7 +114,14 @@ header {
     -webkit-backdrop-filter: blur(10px);
     transition: border-color 0.2s ease, transform 0.2s ease;
     contain: layout style;
+    animation: fadeSlideUp 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
+
+.accordion-group:nth-of-type(1) { animation-delay: 0.05s; }
+.accordion-group:nth-of-type(2) { animation-delay: 0.10s; }
+.accordion-group:nth-of-type(3) { animation-delay: 0.15s; }
+.accordion-group:nth-of-type(4) { animation-delay: 0.20s; }
+.accordion-group:nth-of-type(5) { animation-delay: 0.25s; }
 
 .accordion-group:focus-within,
 .accordion-group:has(.btn-trigger.active) {
@@ -167,17 +198,17 @@ header {
     color: var(--text-sub);
     font-size: 14px;
     flex-shrink: 0;
-    transition: transform 0.2s ease, color 0.2s ease;
+    transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1), color 0.2s ease;
 }
 
 @media (hover: hover) {
     .single-btn .btn-trigger:hover .link-arrow {
         color: var(--accent-yellow);
-        transform: translateX(-3px);
+        transform: translate3d(-4px, 0, 0);
     }
 }
 
-/* ─── محتوای زیرمنو (انیمیشن نرم با Grid) ─── */
+/* ─── محتوای زیرمنو ─── */
 .submenu-content {
     display: grid;
     grid-template-rows: 0fr;
@@ -228,6 +259,18 @@ header {
     line-height: 1.45;
 }
 
+.submenu-content.open .item-btn {
+    animation: fadeSlideUp 0.26s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.submenu-content.open .item-btn:nth-child(1) { animation-delay: 0.03s; }
+.submenu-content.open .item-btn:nth-child(2) { animation-delay: 0.06s; }
+.submenu-content.open .item-btn:nth-child(3) { animation-delay: 0.09s; }
+.submenu-content.open .item-btn:nth-child(4) { animation-delay: 0.12s; }
+.submenu-content.open .item-btn:nth-child(5) { animation-delay: 0.15s; }
+.submenu-content.open .item-btn:nth-child(6) { animation-delay: 0.18s; }
+.submenu-content.open .item-btn:nth-child(7) { animation-delay: 0.21s; }
+
 @media (hover: hover) {
     .item-btn:hover {
         background: rgba(255, 183, 3, 0.08);
@@ -240,19 +283,24 @@ header {
     color: #000;
     border-color: var(--accent-yellow);
     font-weight: 700;
-    transform: scale(0.985);
+    transform: scale3d(0.985, 0.985, 1);
 }
 
 .item-btn .link-arrow {
     font-size: 13px;
     opacity: 0.6;
     flex-shrink: 0;
-    transition: opacity 0.16s ease, transform 0.16s ease;
+    transition: opacity 0.16s ease, transform 0.18s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @media (hover: hover) {
     .item-btn:hover .link-arrow {
         opacity: 1;
+        transform: translate3d(-2px, -2px, 0);
+    }
+
+    .item-btn[onclick*="openTopic"]:hover .link-arrow {
+        transform: translate3d(-3px, 0, 0);
     }
 }
 
@@ -273,6 +321,7 @@ header {
 
 .chart-modal.open {
     display: flex;
+    animation: modalFadeIn 0.24s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .chart-modal-bar {
@@ -309,11 +358,12 @@ header {
     font-size: 13px;
     cursor: pointer;
     flex-shrink: 0;
-    transition: background-color 0.15s ease;
+    transition: background-color 0.15s ease, transform 0.15s ease;
 }
 
 .chart-back-btn:active {
     background: rgba(235, 219, 178, 0.2);
+    transform: scale3d(0.97, 0.97, 1);
 }
 
 .chart-frame {
@@ -332,6 +382,7 @@ header {
     font-weight: 400;
     color: var(--text-sub);
     line-height: 1.6;
+    animation: fadeSlideUp 0.42s cubic-bezier(0.22, 1, 0.36, 1) 0.3s both;
 }
 
 .app-footer strong {
