@@ -2,19 +2,17 @@
 <html lang="fa" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>دفتر تلفن | دانشگاه فسا</title>
+  <meta name="theme-color" content="#121315" />
 
-  <!-- SDK تلگرام -->
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
-
-  <!-- فونت وزیرمتن -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;800&display=swap" rel="stylesheet" />
 
+  <script src="https://telegram.org/js/telegram-web-app.js" defer></script>
+
   <style>
-    /* ============================================================
-       🎨 تم اصلی پروژه (همون :root مینی‌اپ)
-       ============================================================ */
     :root {
       --bg-dark: #121315;
       --surface-card: #1c1d21;
@@ -27,15 +25,22 @@
       --radius-sub: 8px;
     }
 
-    * {
+    *,
+    *::before,
+    *::after {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
       -webkit-tap-highlight-color: transparent;
     }
 
+    html {
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+    }
+
     body {
-      font-family: 'Vazirmatn', system-ui, -apple-system, sans-serif;
+      font-family: 'Vazirmatn', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       background-color: var(--bg-dark);
       background-image:
         radial-gradient(rgba(255, 183, 3, 0.05) 1px, transparent 0),
@@ -44,62 +49,96 @@
       background-size: 24px 24px, 12px 12px, 12px 12px;
       color: var(--text-main);
       min-height: 100vh;
+      min-height: 100dvh;
       display: flex;
       justify-content: center;
-      padding: 20px 16px 40px;
+      padding:
+        max(20px, env(safe-area-inset-top))
+        max(16px, env(safe-area-inset-right))
+        max(36px, env(safe-area-inset-bottom))
+        max(16px, env(safe-area-inset-left));
+      overflow-x: hidden;
     }
 
     .container {
       width: 100%;
-      max-width: 440px;
+      max-width: clamp(300px, 92vw, 480px);
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: clamp(10px, 2.5vw, 14px);
     }
 
     /* ─── هدر ─── */
     header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       text-align: center;
-      margin-bottom: 8px;
-      position: relative;
+      margin-bottom: 4px;
+      gap: 6px;
     }
+
+    .header-top {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .header-spacer {
+      width: 68px;
+      flex-shrink: 0;
+    }
+
     .brand-title {
-      font-size: 22px;
+      font-size: clamp(19px, 4.8vw, 23px);
       font-weight: 800;
-      letter-spacing: -0.5px;
+      letter-spacing: -0.4px;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-    }
-    .brand-title span { color: var(--accent-yellow); }
-    .brand-subtitle {
-      font-size: 12px;
-      color: var(--text-sub);
-      margin-top: 4px;
+      gap: 7px;
+      line-height: 1.3;
     }
 
-    /* دکمه‌ی بازگشت به صفحه اصلی (بالا-راست) */
+    .brand-title span {
+      color: var(--accent-yellow);
+    }
+
+    .brand-subtitle {
+      font-size: clamp(11.5px, 3vw, 13px);
+      color: var(--text-sub);
+    }
+
     .back-home {
-      position: absolute;
-      top: 0;
-      right: 0;
-      display: flex;
+      display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 4px;
       padding: 6px 10px;
+      min-height: 34px;
       font-size: 12px;
-      font-weight: 600;
+      font-weight: 700;
       color: var(--accent-yellow);
       background: var(--accent-muted);
       border: 1px solid rgba(255, 183, 3, 0.3);
       border-radius: var(--radius-sub);
       text-decoration: none;
-      transition: all .2s ease;
+      flex-shrink: 0;
+      transition: background-color 0.16s ease, color 0.16s ease, transform 0.14s ease;
     }
+
+    @media (hover: hover) {
+      .back-home:hover {
+        background: rgba(255, 183, 3, 0.2);
+      }
+    }
+
     .back-home:active {
       background: var(--accent-yellow);
       color: #000;
+      transform: scale(0.96);
     }
 
     /* ─── نوار جستجو ─── */
@@ -107,16 +146,21 @@
       position: relative;
       border-radius: var(--radius-main);
       border: 1px solid var(--border-color);
-      background: rgba(28, 29, 33, 0.6);
-      backdrop-filter: blur(12px);
-      transition: border-color .25s ease;
+      background: rgba(28, 29, 33, 0.75);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
     }
+
     .search-wrap:focus-within {
-      border-color: rgba(255, 183, 3, 0.4);
+      border-color: rgba(255, 183, 3, 0.45);
+      box-shadow: 0 0 0 3px rgba(255, 183, 3, 0.12);
     }
+
     .search-wrap input {
       width: 100%;
-      padding: 14px 42px 14px 16px;
+      min-height: 48px;
+      padding: 12px 42px 12px 16px;
       background: transparent;
       border: none;
       outline: none;
@@ -124,7 +168,11 @@
       font-family: inherit;
       font-size: 14px;
     }
-    .search-wrap input::placeholder { color: var(--text-sub); }
+
+    .search-wrap input::placeholder {
+      color: var(--text-sub);
+    }
+
     .search-icon {
       position: absolute;
       right: 14px;
@@ -141,75 +189,119 @@
       color: var(--text-sub);
       padding: 0 4px;
     }
-    .count-bar b { color: var(--accent-yellow); }
+
+    .count-bar b {
+      color: var(--accent-yellow);
+    }
 
     /* ─── لیست کارت‌ها ─── */
-    .list { display: flex; flex-direction: column; gap: 10px; }
+    .list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
 
     .card {
       border-radius: var(--radius-main);
       border: 1px solid var(--border-color);
-      background: rgba(28, 29, 33, 0.6);
-      backdrop-filter: blur(12px);
+      background: rgba(28, 29, 33, 0.75);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
       padding: 14px;
-      transition: border-color .25s ease;
-      animation: fadeIn .25s ease;
+      contain: layout style;
+      opacity: 0;
+      transform: translateY(6px);
+      animation: cardFadeIn 0.26s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      transition: border-color 0.2s ease, transform 0.2s ease;
     }
-    .card:hover, .card:focus-within {
-      border-color: rgba(255, 183, 3, 0.35);
+
+    @keyframes cardFadeIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(6px); }
-      to   { opacity: 1; transform: translateY(0); }
+
+    @media (hover: hover) {
+      .card:hover {
+        border-color: rgba(255, 183, 3, 0.38);
+      }
+    }
+
+    .card:focus-within {
+      border-color: rgba(255, 183, 3, 0.42);
     }
 
     .card-top {
       display: flex;
       align-items: center;
-      gap: 10px;
-      margin-bottom: 8px;
+      gap: 11px;
+      margin-bottom: 10px;
     }
+
     .avatar {
-      width: 40px; height: 40px;
+      width: 42px;
+      height: 42px;
       border-radius: var(--radius-sub);
-      display: grid; place-items: center;
+      display: grid;
+      place-items: center;
       font-weight: 800;
       color: #000;
       background: var(--accent-yellow);
       flex-shrink: 0;
       font-size: 16px;
+      box-shadow: 0 4px 12px rgba(255, 183, 3, 0.2);
     }
+
+    .info {
+      flex: 1;
+      min-width: 0;
+    }
+
     .name {
       font-weight: 700;
       font-size: 14.5px;
       color: var(--text-main);
+      line-height: 1.4;
     }
+
     .role {
       font-size: 12px;
       color: var(--text-sub);
       margin-top: 2px;
     }
-    .phone {
+
+    .phone-pill {
+      display: inline-block;
       direction: ltr;
-      text-align: right;
       font-family: 'Vazirmatn', monospace;
       font-size: 13px;
-      color: var(--text-sub);
-      margin: 6px 0 10px;
-      letter-spacing: 1px;
+      font-weight: 700;
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 4px 10px;
+      margin-bottom: 10px;
+      letter-spacing: 0.8px;
     }
 
-    .actions { display: flex; gap: 8px; }
+    .actions {
+      display: flex;
+      gap: 8px;
+    }
+
     .btn {
       flex: 1;
-      padding: 11px 10px;
+      min-height: 42px;
+      padding: 9px 10px;
       border-radius: var(--radius-sub);
       border: 1px solid var(--border-color);
       background: rgba(255, 255, 255, 0.03);
       color: var(--text-main);
       font-family: inherit;
       font-size: 13px;
-      font-weight: 600;
+      font-weight: 700;
       cursor: pointer;
       text-decoration: none;
       text-align: center;
@@ -217,19 +309,32 @@
       align-items: center;
       justify-content: center;
       gap: 6px;
-      transition: all .2s ease;
+      transition: background-color 0.16s ease, color 0.16s ease, border-color 0.16s ease, transform 0.14s ease;
     }
-    .btn:active { transform: scale(0.98); }
+
+    @media (hover: hover) {
+      .btn:hover {
+        background: rgba(255, 255, 255, 0.07);
+        border-color: rgba(255, 255, 255, 0.16);
+      }
+
+      .btn-call:hover {
+        background: rgba(255, 183, 3, 0.22);
+        border-color: rgba(255, 183, 3, 0.5);
+      }
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
 
     .btn-call {
       background: var(--accent-muted);
-      border-color: rgba(255, 183, 3, 0.3);
+      border-color: rgba(255, 183, 3, 0.32);
       color: var(--accent-yellow);
     }
-    .btn-call:active {
-      background: var(--accent-yellow);
-      color: #000;
-    }
+
+    .btn-call:active,
     .btn-copy:active {
       background: var(--accent-yellow);
       color: #000;
@@ -239,62 +344,95 @@
     .empty {
       text-align: center;
       color: var(--text-sub);
-      padding: 30px 0;
-      font-size: 13px;
+      padding: 32px 16px;
+      font-size: 13.5px;
+      border-radius: var(--radius-main);
+      border: 1px dashed var(--border-color);
+      background: rgba(28, 29, 33, 0.45);
     }
 
     /* ─── Toast ─── */
     .toast {
       position: fixed;
-      bottom: 24px;
+      bottom: max(22px, env(safe-area-inset-bottom));
       left: 50%;
-      transform: translateX(-50%) translateY(120%);
+      transform: translateX(-50%) translateY(16px);
       background: var(--accent-yellow);
       color: #000;
       padding: 10px 18px;
       border-radius: var(--radius-sub);
       font-family: inherit;
       font-size: 13px;
-      font-weight: 700;
+      font-weight: 800;
       opacity: 0;
-      transition: transform .3s, opacity .3s;
+      visibility: hidden;
+      transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.25s ease, visibility 0.25s ease;
       z-index: 100;
       pointer-events: none;
-      box-shadow: 0 8px 24px rgba(255, 183, 3, 0.25);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+      white-space: nowrap;
     }
+
     .toast.show {
       transform: translateX(-50%) translateY(0);
       opacity: 1;
+      visibility: visible;
+    }
+
+    @media (min-width: 768px) {
+      .container {
+        max-width: 520px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        opacity: 1 !important;
+        transform: none !important;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="container">
+  <main class="container">
     <header>
-      <a href="index.html" class="back-home">→ بازگشت</a>
-      <div class="brand-title">📒 دفتر تلفن <span>دانشگاه فسا</span></div>
-      <div class="brand-subtitle">مسئولین و اساتید — تماس سریع</div>
+      <div class="header-top">
+        <a href="index.html" class="back-home" onclick="triggerHaptic()">→ بازگشت</a>
+        <h1 class="brand-title">📒 دفتر تلفن <span>دانشگاه فسا</span></h1>
+        <span class="header-spacer" aria-hidden="true"></span>
+      </div>
+      <p class="brand-subtitle">مسئولین و اساتید — تماس سریع</p>
     </header>
 
     <div class="search-wrap">
       <input type="search" id="search" placeholder="جستجوی نام، سمت یا شماره..." autocomplete="off" />
-      <span class="search-icon">🔍</span>
+      <span class="search-icon" aria-hidden="true">🔍</span>
     </div>
 
     <div class="count-bar" id="countBar"></div>
 
     <section class="list" id="list"></section>
     <p class="empty" id="empty" hidden>موردی پیدا نشد 🤷</p>
-  </div>
+  </main>
 
-  <div class="toast" id="toast"></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <script>
     "use strict";
 
-    /* ============================================================
-       📞 داده‌های دفتر تلفن
-       ============================================================ */
+    const tg = window.Telegram?.WebApp;
+
+    function triggerHaptic(style = "light") {
+      if (tg?.HapticFeedback?.impactOccurred) {
+        tg.HapticFeedback.impactOccurred(style);
+      }
+    }
+
     const CONTACTS = [
       { id: 1,  name: "آقای پویا",        role: "خوابگاه پسران",     phone: "+989366019642" },
       { id: 2,  name: "خانم باصری",       role: "خوابگاه دختران",    phone: "+989171311734" },
@@ -322,29 +460,25 @@
       { id: 24, name: "استاد مظلومی",     role: "استاد عمومی",       phone: "+989171347122" },
     ];
 
-    /* ============================================================
-       Helpers
-       ============================================================ */
     function normalizeFa(s) {
       return String(s).toLowerCase()
         .replace(/ي/g, "ی").replace(/ك/g, "ک")
         .replace(/[ًٌٍَُِّْ]/g, "").trim();
     }
+
     function formatPhoneFa(phone) {
       const digits = phone.replace(/\D/g, "");
       const local = "0" + digits.slice(2);
       return local.replace(/\d/g, d => "۰۱۲۳۴۵۶۷۸۹"[d])
                   .replace(/^(\d{4})(\d{3})(\d+)$/, "$1 $2 $3");
     }
+
     function escapeHtml(s) {
       return String(s).replace(/[&<>"']/g, m => ({
         "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
       }[m]));
     }
 
-    /* ============================================================
-       DOM
-       ============================================================ */
     const $list   = document.getElementById("list");
     const $search = document.getElementById("search");
     const $empty  = document.getElementById("empty");
@@ -353,6 +487,7 @@
 
     let query = "";
     let toastTimer;
+
     function toast(msg) {
       $toast.textContent = msg;
       $toast.classList.add("show");
@@ -360,25 +495,31 @@
       toastTimer = setTimeout(() => $toast.classList.remove("show"), 1800);
     }
 
-    /* ============================================================
-       Render
-       ============================================================ */
     function getFiltered() {
       const q = normalizeFa(query);
       if (!q) return CONTACTS;
-      return CONTACTS.filter(c =>
-        normalizeFa(c.name).includes(q) ||
-        normalizeFa(c.role).includes(q) ||
-        c.phone.includes(q)
-      );
+      return CONTACTS.filter(c => {
+        const localPhone = "0" + c.phone.replace(/\D/g, "").slice(2);
+        return normalizeFa(c.name).includes(q) ||
+               normalizeFa(c.role).includes(q) ||
+               c.phone.includes(q) ||
+               localPhone.includes(q);
+      });
     }
 
     function render() {
       const list = getFiltered();
       $count.innerHTML = `مجموع <b>${CONTACTS.length}</b> شماره — نمایش <b>${list.length}</b>`;
-      $list.innerHTML = "";
       $empty.hidden = list.length > 0;
-      list.forEach(c => $list.appendChild(renderCard(c)));
+
+      const frag = document.createDocumentFragment();
+      list.forEach((c, index) => {
+        const card = renderCard(c);
+        card.style.animationDelay = `${Math.min(index * 0.025, 0.25)}s`;
+        frag.appendChild(card);
+      });
+
+      $list.replaceChildren(frag);
     }
 
     function renderCard(c) {
@@ -387,60 +528,79 @@
       card.className = "card";
       card.innerHTML = `
         <div class="card-top">
-          <div class="avatar">${initial}</div>
-          <div style="flex:1;min-width:0">
+          <div class="avatar">${escapeHtml(initial)}</div>
+          <div class="info">
             <div class="name">${escapeHtml(c.name)}</div>
             <div class="role">${escapeHtml(c.role)}</div>
           </div>
         </div>
-        <div class="phone" dir="ltr">${formatPhoneFa(c.phone)}</div>
+        <div class="phone-pill" dir="ltr">${formatPhoneFa(c.phone)}</div>
         <div class="actions">
-          <a class="btn btn-call" href="tel:${c.phone}">📞 تماس</a>
+          <a class="btn btn-call" href="tel:${c.phone}" onclick="triggerHaptic()">📞 تماس</a>
           <button class="btn btn-copy" type="button">📋 کپی شماره</button>
         </div>
       `;
-      card.querySelector(".btn-copy").addEventListener("click", () => copyPhone(c.phone));
+      card.querySelector(".btn-copy").addEventListener("click", () => {
+        triggerHaptic("light");
+        copyPhone(c.phone);
+      });
       return card;
     }
 
-    /* ============================================================
-       Copy
-       ============================================================ */
     function copyPhone(phone) {
+      const localPhone = "0" + phone.replace(/\D/g, "").slice(2);
       const done = () => toast("شماره کپی شد ✅");
       if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(phone).then(done).catch(() => fallbackCopy(phone, done));
-      } else fallbackCopy(phone, done);
+        navigator.clipboard.writeText(localPhone).then(done).catch(() => fallbackCopy(localPhone, done));
+      } else {
+        fallbackCopy(localPhone, done);
+      }
     }
+
     function fallbackCopy(text, cb) {
       const ta = document.createElement("textarea");
-      ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
-      document.body.appendChild(ta); ta.select();
-      try { document.execCommand("copy"); cb(); }
-      catch { toast("کپی نشد ❌"); }
+      ta.value = text;
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      try {
+        document.execCommand("copy");
+        cb();
+      } catch {
+        toast("کپی نشد ❌");
+      }
       document.body.removeChild(ta);
     }
 
-    /* ============================================================
-       Events
-       ============================================================ */
-    $search.addEventListener("input", e => { query = e.target.value; render(); });
-    $search.addEventListener("keydown", e => {
-      if (e.key === "Escape") { $search.value = ""; query = ""; render(); }
+    $search.addEventListener("input", e => {
+      query = e.target.value;
+      render();
     });
 
-    /* ============================================================
-       Init + Telegram BackButton
-       ============================================================ */
+    $search.addEventListener("keydown", e => {
+      if (e.key === "Escape") {
+        $search.value = "";
+        query = "";
+        render();
+      }
+    });
+
     render();
 
-    if (window.Telegram && Telegram.WebApp) {
-      Telegram.WebApp.ready();
-      Telegram.WebApp.BackButton.show();
-      Telegram.WebApp.BackButton.onClick(() => {
-        window.location.href = "index.html";
-      });
-    }
+    window.addEventListener("DOMContentLoaded", () => {
+      if (!tg) return;
+      tg.ready();
+      if (typeof tg.setHeaderColor === "function") tg.setHeaderColor("#121315");
+      if (typeof tg.setBackgroundColor === "function") tg.setBackgroundColor("#121315");
+      if (tg.BackButton) {
+        tg.BackButton.show();
+        tg.BackButton.onClick(() => {
+          triggerHaptic("light");
+          window.location.href = "index.html";
+        });
+      }
+    });
   </script>
 </body>
 </html>
