@@ -2,11 +2,15 @@
 <html lang="fa" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>نرم‌افزارها | منابع عمران فسا</title>
+  <meta name="theme-color" content="#121315" />
 
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;800&display=swap" rel="stylesheet" />
+
+  <script src="https://telegram.org/js/telegram-web-app.js" defer></script>
 
   <style>
     :root {
@@ -21,10 +25,22 @@
       --radius-sub: 8px;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html {
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+    }
 
     body {
-      font-family: 'Vazirmatn', system-ui, -apple-system, sans-serif;
+      font-family: 'Vazirmatn', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       background-color: var(--bg-dark);
       background-image:
         radial-gradient(rgba(255, 183, 3, 0.05) 1px, transparent 0),
@@ -33,102 +49,202 @@
       background-size: 24px 24px, 12px 12px, 12px 12px;
       color: var(--text-main);
       min-height: 100vh;
+      min-height: 100dvh;
       display: flex;
       justify-content: center;
-      padding: 20px 16px 40px;
+      padding:
+        max(20px, env(safe-area-inset-top))
+        max(16px, env(safe-area-inset-right))
+        max(36px, env(safe-area-inset-bottom))
+        max(16px, env(safe-area-inset-left));
+      overflow-x: hidden;
     }
 
     .container {
       width: 100%;
-      max-width: 440px;
+      max-width: clamp(300px, 92vw, 480px);
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: clamp(10px, 2.5vw, 14px);
     }
 
-    header { text-align: center; margin-bottom: 8px; position: relative; }
-    .brand-title {
-      font-size: 22px; font-weight: 800; letter-spacing: -0.5px;
-      display: flex; align-items: center; justify-content: center; gap: 8px;
+    /* ─── هدر ─── */
+    header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      margin-bottom: 6px;
+      gap: 6px;
     }
-    .brand-title span { color: var(--accent-yellow); }
-    .brand-subtitle { font-size: 12px; color: var(--text-sub); margin-top: 4px; }
+
+    .header-top {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .header-spacer {
+      width: 68px;
+      flex-shrink: 0;
+    }
+
+    .brand-title {
+      font-size: clamp(19px, 4.8vw, 23px);
+      font-weight: 800;
+      letter-spacing: -0.4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      line-height: 1.3;
+    }
+
+    .brand-title span {
+      color: var(--accent-yellow);
+    }
+
+    .brand-subtitle {
+      font-size: clamp(11.5px, 3vw, 13px);
+      color: var(--text-sub);
+    }
 
     .back-home {
-      position: absolute; top: 0; right: 0;
-      display: flex; align-items: center; gap: 4px;
-      padding: 6px 10px; font-size: 12px; font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      padding: 6px 10px;
+      min-height: 34px;
+      font-size: 12px;
+      font-weight: 700;
       color: var(--accent-yellow);
       background: var(--accent-muted);
       border: 1px solid rgba(255, 183, 3, 0.3);
       border-radius: var(--radius-sub);
-      text-decoration: none; transition: all .2s ease;
+      text-decoration: none;
+      flex-shrink: 0;
+      transition: background-color 0.16s ease, color 0.16s ease, transform 0.14s ease;
     }
-    .back-home:active { background: var(--accent-yellow); color: #000; }
 
-    /* کارت نرم‌افزار */
+    @media (hover: hover) {
+      .back-home:hover {
+        background: rgba(255, 183, 3, 0.2);
+      }
+    }
+
+    .back-home:active {
+      background: var(--accent-yellow);
+      color: #000;
+      transform: scale(0.96);
+    }
+
+    /* ─── کارت نرم‌افزار ─── */
     .software-card {
       border-radius: var(--radius-main);
       border: 1px solid var(--border-color);
-      background: rgba(28, 29, 33, 0.6);
-      backdrop-filter: blur(12px);
+      background: rgba(28, 29, 33, 0.75);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
       overflow: hidden;
-      transition: border-color .25s ease;
-      animation: fadeIn .3s ease;
-    }
-    .software-card:hover,
-    .software-card:focus-within {
-      border-color: rgba(255, 183, 3, 0.35);
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(6px); }
-      to   { opacity: 1; transform: translateY(0); }
+      contain: layout style;
+      opacity: 0;
+      transform: translateY(8px);
+      animation: cardEnter 0.32s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      transition: border-color 0.2s ease, transform 0.2s ease;
     }
 
-    /* پیش‌نمایش */
+    .software-card:nth-of-type(1) { animation-delay: 0.02s; }
+    .software-card:nth-of-type(2) { animation-delay: 0.06s; }
+    .software-card:nth-of-type(3) { animation-delay: 0.10s; }
+    .software-card:nth-of-type(4) { animation-delay: 0.14s; }
+    .software-card:nth-of-type(5) { animation-delay: 0.18s; }
+    .software-card:nth-of-type(n+6) { animation-delay: 0.22s; }
+
+    @keyframes cardEnter {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (hover: hover) {
+      .software-card:hover {
+        border-color: rgba(255, 183, 3, 0.38);
+        transform: translateY(-2px);
+      }
+    }
+
+    .software-card:focus-within {
+      border-color: rgba(255, 183, 3, 0.42);
+    }
+
+    /* ─── پیش‌نمایش ─── */
     .preview {
       position: relative;
       width: 100%;
-      height: 130px;
-      background: linear-gradient(135deg, #23252a, #18191c);
+      height: 116px;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(255, 183, 3, 0.07), transparent 70%),
+        linear-gradient(135deg, #222429, #17181b);
       display: flex;
       align-items: center;
       justify-content: center;
       overflow: hidden;
       border-bottom: 1px solid var(--border-color);
     }
+
     .preview-logo {
-      width: 64px; height: 64px;
+      width: 60px;
+      height: 60px;
       border-radius: var(--radius-sub);
-      display: grid; place-items: center;
-      font-size: 30px; font-weight: 800;
+      display: grid;
+      place-items: center;
+      font-size: 27px;
+      font-weight: 800;
       color: #000;
       background: var(--accent-yellow);
-      box-shadow: 0 6px 18px rgba(255, 183, 3, 0.25);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+      transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+      will-change: transform;
     }
+
+    @media (hover: hover) {
+      .software-card:hover .preview-logo {
+        transform: scale(1.06);
+      }
+    }
+
     .preview-tag {
       position: absolute;
-      top: 10px; left: 10px;
+      top: 10px;
+      left: 10px;
       font-size: 10.5px;
-      background: rgba(0,0,0,0.55);
+      background: rgba(18, 19, 21, 0.72);
       color: var(--accent-yellow);
-      padding: 3px 8px;
+      padding: 3px 9px;
       border-radius: 999px;
       border: 1px solid rgba(255, 183, 3, 0.35);
       font-weight: 700;
     }
 
-    /* بدنه */
-    .card-body { padding: 14px; }
+    /* ─── بدنه ─── */
+    .card-body {
+      padding: 14px;
+    }
+
     .sw-name {
-      font-size: 15px;
+      font-size: 15.5px;
       font-weight: 800;
       color: var(--text-main);
-      margin-bottom: 4px;
+      margin-bottom: 5px;
       display: flex;
       align-items: center;
       gap: 6px;
     }
+
     .sw-desc {
       font-size: 12.5px;
       color: var(--text-sub);
@@ -142,162 +258,188 @@
       justify-content: center;
       gap: 8px;
       width: 100%;
-      padding: 11px 14px;
+      min-height: 44px;
+      padding: 10px 14px;
       background: var(--accent-muted);
-      border: 1px solid rgba(255, 183, 3, 0.3);
+      border: 1px solid rgba(255, 183, 3, 0.32);
       color: var(--accent-yellow);
       font-family: inherit;
-      font-size: 13px;
+      font-size: 13.5px;
       font-weight: 700;
       border-radius: var(--radius-sub);
       cursor: pointer;
       text-decoration: none;
-      transition: all .2s ease;
+      transition: background-color 0.16s ease, color 0.16s ease, border-color 0.16s ease, transform 0.14s ease;
     }
+
+    @media (hover: hover) {
+      .btn-download:hover {
+        background: rgba(255, 183, 3, 0.22);
+        border-color: rgba(255, 183, 3, 0.55);
+      }
+    }
+
     .btn-download:active {
       background: var(--accent-yellow);
       color: #000;
       border-color: var(--accent-yellow);
-      transform: scale(0.98);
+      transform: scale(0.985);
     }
 
-    /* هشدار */
+    /* ─── هشدار ─── */
     .notice {
-      font-size: 11px;
+      font-size: 11.5px;
       color: var(--text-sub);
       background: rgba(255, 183, 3, 0.06);
-      border: 1px dashed rgba(255, 183, 3, 0.3);
+      border: 1px dashed rgba(255, 183, 3, 0.32);
       border-radius: var(--radius-sub);
-      padding: 10px 12px;
+      padding: 11px 13px;
       line-height: 1.8;
-      margin-top: 6px;
+      margin-top: 4px;
     }
-    .notice b { color: var(--accent-yellow); }
+
+    .notice b {
+      color: var(--accent-yellow);
+    }
+
+    @media (min-width: 768px) {
+      .container {
+        max-width: 520px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        opacity: 1 !important;
+        transform: none !important;
+      }
+    }
   </style>
 </head>
 <body>
-  <div class="container">
+  <main class="container">
     <header>
-      <a href="index.html" class="back-home">→ بازگشت</a>
-      <div class="brand-title">💻 نرم‌افزارهای <span>عمران</span></div>
-      <div class="brand-subtitle">دانلود نسخه‌های پرکاربرد مهندسی عمران</div>
+      <div class="header-top">
+        <a href="index.html" class="back-home" onclick="triggerHaptic()">→ بازگشت</a>
+        <h1 class="brand-title">💻 نرم‌افزارهای <span>عمران</span></h1>
+        <span class="header-spacer" aria-hidden="true"></span>
+      </div>
+      <p class="brand-subtitle">دانلود نسخه‌های پرکاربرد مهندسی عمران</p>
     </header>
 
     <!-- AutoCAD -->
-    <div class="software-card">
+    <article class="software-card">
       <div class="preview">
         <div class="preview-logo" style="background:#d63031; color:#fff;">A</div>
       </div>
       <div class="card-body">
-        <div class="sw-name">AutoCAD</div>
-        <div class="sw-desc">نرم‌افزار ترسیم و طراحی نقشه‌های دوبعدی و سه‌بعدی برای مهندسان عمران و معماران.</div>
-        <a class="btn-download" href="https://soft98.ir/software/engineering/2355-%D8%A7%D8%AA%D9%88%DA%A9%D8%AF-%D9%BE%D9%86%D8%AC.html" target="_blank" rel="noopener">
+        <h2 class="sw-name">AutoCAD</h2>
+        <p class="sw-desc">نرم‌افزار ترسیم و طراحی نقشه‌های دوبعدی و سه‌بعدی برای مهندسان عمران و معماران.</p>
+        <a class="btn-download" href="https://soft98.ir/software/engineering/2355-%D8%A7%D8%AA%D9%88%DA%A9%D8%AF-%D9%BE%D9%86%D8%AC.html" target="_blank" rel="noopener noreferrer" onclick="openDownload(event, this.href)">
           ⬇️ دانلود از Soft98
         </a>
       </div>
-    </div>
+    </article>
 
     <!-- MATLAB -->
-    <div class="software-card">
+    <article class="software-card">
       <div class="preview">
         <div class="preview-logo" style="background:#e16737; color:#fff;">M</div>
         <span class="preview-tag">پرطرفدار</span>
       </div>
       <div class="card-body">
-        <div class="sw-name">MATLAB</div>
-        <div class="sw-desc">محیط برنامه‌نویسی و محاسبات عددی برای تحلیل، مدل‌سازی و شبیه‌سازی مسائل مهندسی.</div>
-        <a class="btn-download" href="https://soft98.ir/software/engineering/1291-%D8%AF%D8%A7%D9%86%D9%84%D9%88%E2%80%8C%D8%AF%E2%80%8C-%D9%85%D8%AA%D9%84%D8%A8-%D9%87%D9%81%D8%AA.html" target="_blank" rel="noopener">
+        <h2 class="sw-name">MATLAB</h2>
+        <p class="sw-desc">محیط برنامه‌نویسی و محاسبات عددی برای تحلیل، مدل‌سازی و شبیه‌سازی مسائل مهندسی.</p>
+        <a class="btn-download" href="https://soft98.ir/software/engineering/1291-%D8%AF%D8%A7%D9%86%D9%84%D9%88%E2%80%8C%D8%AF%E2%80%8C-%D9%85%D8%AA%D9%84%D8%A8-%D9%87%D9%81%D8%AA.html" target="_blank" rel="noopener noreferrer" onclick="openDownload(event, this.href)">
           ⬇️ دانلود از Soft98
         </a>
       </div>
-    </div>
+    </article>
 
     <!-- CSI SAFE -->
-    <div class="software-card">
+    <article class="software-card">
       <div class="preview">
         <div class="preview-logo" style="background:#6c5ce7; color:#fff;">SA</div>
         <span class="preview-tag">تخصصی سازه</span>
       </div>
       <div class="card-body">
-        <div class="sw-name">CSI SAFE</div>
-        <div class="sw-desc">طراحی دال‌ها، فونداسیون‌ها و سیستم‌های پیچیده‌ی سازه‌ای با دقت بالا.</div>
-        <a class="btn-download" href="https://soft98.ir/software/engineering/3404-csi_safe.html" target="_blank" rel="noopener">
+        <h2 class="sw-name">CSI SAFE</h2>
+        <p class="sw-desc">طراحی دال‌ها، فونداسیون‌ها و سیستم‌های پیچیده‌ی سازه‌ای با دقت بالا.</p>
+        <a class="btn-download" href="https://soft98.ir/software/engineering/3404-csi_safe.html" target="_blank" rel="noopener noreferrer" onclick="openDownload(event, this.href)">
           ⬇️ دانلود از Soft98
         </a>
       </div>
-    </div>
+    </article>
 
     <!-- CSI ETABS -->
-    <div class="software-card">
+    <article class="software-card">
       <div class="preview">
         <div class="preview-logo" style="background:#0984e3; color:#fff;">E</div>
         <span class="preview-tag">تخصصی سازه</span>
       </div>
       <div class="card-body">
-        <div class="sw-name">CSI ETABS</div>
-        <div class="sw-desc">نرم‌افزار تحلیل و طراحی سازه‌های ساختمانی؛ پرکاربردترین ابزار مهندسی سازه.</div>
-        <a class="btn-download" href="https://soft98.ir/software/engineering/2361-csi-etabs.html" target="_blank" rel="noopener">
+        <h2 class="sw-name">CSI ETABS</h2>
+        <p class="sw-desc">نرم‌افزار تحلیل و طراحی سازه‌های ساختمانی؛ پرکاربردترین ابزار مهندسی سازه.</p>
+        <a class="btn-download" href="https://soft98.ir/software/engineering/2361-csi-etabs.html" target="_blank" rel="noopener noreferrer" onclick="openDownload(event, this.href)">
           ⬇️ دانلود از Soft98
         </a>
       </div>
-    </div>
+    </article>
 
     <!-- Google Earth -->
-    <div class="software-card">
+    <article class="software-card">
       <div class="preview">
         <div class="preview-logo" style="background:#00b894; color:#fff;">G</div>
       </div>
       <div class="card-body">
-        <div class="sw-name">Google Earth</div>
-        <div class="sw-desc">مشاهده‌ی تصاویر ماهواره‌ای و نقشه‌های سه‌بعدی زمین برای مطالعات و بررسی محلی پروژه‌ها.</div>
-        <a class="btn-download" href="https://soft98.ir/internet/325-google-earth.html" target="_blank" rel="noopener">
+        <h2 class="sw-name">Google Earth</h2>
+        <p class="sw-desc">مشاهده‌ی تصاویر ماهواره‌ای و نقشه‌های سه‌بعدی زمین برای مطالعات و بررسی محلی پروژه‌ها.</p>
+        <a class="btn-download" href="https://soft98.ir/internet/325-google-earth.html" target="_blank" rel="noopener noreferrer" onclick="openDownload(event, this.href)">
           ⬇️ دانلود از Soft98
         </a>
       </div>
-    </div>
+    </article>
 
     <div class="notice">
       ⚠️ <b>توجه:</b> لینک‌های دانلود از سایت Soft98 هستن و به‌روزرسانی نسخه‌ها توسط اون سایت انجام می‌شه. قبل از نصب، حتماً بخش «راهنمای نصب» همون صفحه رو بخونید. این مینی‌اپ فقط نقش معرفی و دسترسی سریع داره.
     </div>
-
-    <!--
-    ============================================================
-    📌 قالب اضافه‌کردن نرم‌افزار جدید
-    ============================================================
-    برای اضافه‌کردن نرم‌افزار، این بلاک رو کپی کن و **قبل از**
-    <div class="notice"> بچسبون. فقط ۴ چیز رو عوض کن:
-
-      1. color    → رنگ برند نرم‌افزار (کد hex)
-      2. initial  → حرف اول اسم نرم‌افزار (یا ۲ حرف مثل SA)
-      3. name     → اسم نرم‌افزار
-      4. desc     → توضیح کوتاه یک‌خطی
-      5. url      → لینک دانلود
-      6. tag      → (اختیاری) برچسب بالای کارت؛ اگه نمی‌خوای،
-                    کل خط <span class="preview-tag">...</span> رو حذف کن
-
-    <div class="software-card">
-      <div class="preview">
-        <div class="preview-logo" style="background:#COLOR; color:#fff;">INITIAL</div>
-        <span class="preview-tag">TAG</span>
-      </div>
-      <div class="card-body">
-        <div class="sw-name">NAME</div>
-        <div class="sw-desc">DESC</div>
-        <a class="btn-download" href="URL" target="_blank" rel="noopener">
-          ⬇️ دانلود از Soft98
-        </a>
-      </div>
-    </div>
-    ============================================================
-    -->
-  </div>
+  </main>
 
   <script>
-    if (window.Telegram && Telegram.WebApp) {
-      Telegram.WebApp.ready();
-      Telegram.WebApp.BackButton.show();
-      Telegram.WebApp.BackButton.onClick(() => window.location.href = "index.html");
+    const tg = window.Telegram?.WebApp;
+
+    function triggerHaptic(style = 'light') {
+      if (tg?.HapticFeedback?.impactOccurred) {
+        tg.HapticFeedback.impactOccurred(style);
+      }
     }
+
+    function openDownload(event, url) {
+      triggerHaptic('light');
+      if (tg?.openLink) {
+        event.preventDefault();
+        tg.openLink(url);
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      if (!tg) return;
+      tg.ready();
+      if (typeof tg.setHeaderColor === 'function') tg.setHeaderColor('#121315');
+      if (typeof tg.setBackgroundColor === 'function') tg.setBackgroundColor('#121315');
+      if (tg.BackButton) {
+        tg.BackButton.show();
+        tg.BackButton.onClick(() => {
+          triggerHaptic('light');
+          window.location.href = 'index.html';
+        });
+      }
+    });
   </script>
 </body>
 </html>
